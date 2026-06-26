@@ -34,7 +34,7 @@ export default function Home() {
       <section className="hero" aria-labelledby="hero-title">
         <div>
           <p className="eyebrow">Quiet confidence</p>
-          <h1 id="hero-title">A navigation system for living.</h1>
+          <h1 id="hero-title">True North. Quietly yours.</h1>
           <p className="lede">
             TUSO should feel like standing on a mountain before sunrise: clear,
             grounded, and still enough to see what matters.
@@ -60,6 +60,23 @@ export default function Home() {
             <span>Center</span>
             <span>North</span>
           </div>
+        </div>
+      </section>
+
+      <section className="section moodboard-section" aria-labelledby="moodboard-title">
+        <div className="section-heading">
+          <h2 id="moodboard-title">Moodboard reference.</h2>
+          <p>
+            The PNG reference sharpens the direction toward editorial serif
+            type, fogged mountain photography, soft paper cards, and instrument
+            details that feel engraved rather than decorative.
+          </p>
+        </div>
+        <div className="moodboard-frame">
+          <img
+            src="/guidelines/visual-moodboard.png"
+            alt="TUSO visual moodboard with palette, typography, True North mark, app cards, and nature photography"
+          />
         </div>
       </section>
 
@@ -130,6 +147,36 @@ export default function Home() {
               <span className="pill">Act</span>
             </div>
           </article>
+        </div>
+
+        <div className="mark-grid" aria-label="App icon and mark samples">
+          <div className="app-icon dark-icon">
+            <span className="mini-mark" aria-hidden="true">
+              <span className="star">*</span>
+              <span className="center" />
+            </span>
+          </div>
+          <div className="app-icon light-icon">
+            <span className="mini-mark" aria-hidden="true">
+              <span className="star">*</span>
+              <span className="center" />
+            </span>
+          </div>
+          <div className="app-icon dawn-icon">
+            <span className="mini-mark" aria-hidden="true">
+              <span className="star">*</span>
+              <span className="center" />
+            </span>
+          </div>
+          <div className="mark-card">
+            <p className="eyebrow">Motion principle</p>
+            <div className="motion-row">
+              <span>Appear</span>
+              <span>Align</span>
+              <span>Breathe</span>
+              <span>Settle</span>
+            </div>
+          </div>
         </div>
 
         <div className="quote-band">
