@@ -132,6 +132,15 @@ function formatCastTime(date: Date) {
   return `${weekday}, ${month} ${ordinalDay(date.getDate())}, ${year} ${hours}:${minutes}`;
 }
 
+function formatTopbarDate(date: Date) {
+  const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+  const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date);
+  const day = date.getDate();
+  const year = date.getFullYear();
+
+  return `${month} ${day}, ${year} - ${weekday}`;
+}
+
 function castLine(): CastLine {
   const roll = Math.floor(Math.random() * 8);
 
@@ -202,6 +211,7 @@ export default function WebPage() {
   const [isRevealed, setIsRevealed] = useState(false);
   const [isReleasing, setIsReleasing] = useState(false);
   const [hasLoadedCasting, setHasLoadedCasting] = useState(false);
+  const [today, setToday] = useState<Date | null>(null);
   const castTimerRef = useRef<number | null>(null);
   const revealTimerRef = useRef<number | null>(null);
   const releaseTimerRef = useRef<number | null>(null);
@@ -249,6 +259,10 @@ export default function WebPage() {
       releaseTimerRef.current = null;
     }
   }
+
+  useEffect(() => {
+    setToday(new Date());
+  }, []);
 
   useEffect(() => {
     const saved = getSavedCasting();
@@ -332,29 +346,34 @@ export default function WebPage() {
     >
       <section className="question-stage" aria-labelledby="question-title">
         <div className="question-compass-panel" aria-label="Breathing compass">
-          <a className="question-brand question-panel-brand" href="/">
-            TUSO
-          </a>
+          <div className="question-panel-topbar">
+            <a className="question-brand" href="/">
+              TUSO
+            </a>
+            <span className="question-topbar-date">{today ? formatTopbarDate(today) : ''}</span>
+          </div>
           <div className="question-compass">
             <div className="question-ring" aria-hidden="true">
-              <span className="question-axis north">N</span>
-              <span className="question-axis east">E</span>
-              <span className="question-axis south">S</span>
-              <span className="question-axis west">W</span>
-              <span className="question-tick vertical" />
-              <span className="question-tick horizontal" />
-              <span
-                className={`question-dot${
-                  asked && (!isRevealed || isReleasing) ? ' is-paused' : ''
-                }${isReleasing ? ' is-releasing' : ''}`}
-              />
-              <span
-                className="question-breath-text"
-                aria-hidden={asked && (!isRevealed || isReleasing)}
-              >
-                <span>Breath in 5.5s</span>
-                <span>Breath out 5.5s</span>
-              </span>
+              <div className="question-ring-core">
+                <span className="question-axis north">N</span>
+                <span className="question-axis east">E</span>
+                <span className="question-axis south">S</span>
+                <span className="question-axis west">W</span>
+                <span className="question-tick vertical" />
+                <span className="question-tick horizontal" />
+                <span
+                  className={`question-dot${
+                    asked && (!isRevealed || isReleasing) ? ' is-paused' : ''
+                  }${isReleasing ? ' is-releasing' : ''}`}
+                />
+                <span
+                  className="question-breath-text"
+                  aria-hidden={asked && (!isRevealed || isReleasing)}
+                >
+                  <span>Breath in 5.5s</span>
+                  <span>Breath out 5.5s</span>
+                </span>
+              </div>
             </div>
           </div>
         </div>

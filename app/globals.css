@@ -776,14 +776,33 @@ h3 {
 
 .question-compass-panel {
   position: relative;
+  display: grid;
+  grid-template-rows: 96px minmax(0, 1fr);
   justify-items: center;
   padding-left: 32px;
 }
 
-.question-panel-brand {
-  position: absolute;
-  top: 32px;
-  left: 32px;
+.question-panel-topbar {
+  position: static;
+  width: calc(100% - 64px);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 18px;
+}
+
+.question-panel-topbar .question-brand {
+  justify-self: start;
+}
+
+.question-topbar-date {
+  grid-column: 2;
+  justify-self: center;
+  color: rgba(246, 244, 239, 0.48);
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .question-form-panel {
@@ -796,6 +815,7 @@ h3 {
 .question-compass {
   width: min(72vw, 440px);
   aspect-ratio: 1;
+  align-self: center;
   display: grid;
   place-items: center;
   perspective: 1000px;
@@ -809,18 +829,26 @@ h3 {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  transform-style: preserve-3d;
   box-shadow:
     0 0 0 1px rgba(212, 178, 106, 0.08) inset,
     0 0 44px rgba(212, 178, 106, 0.07);
 }
 
-.question-landing.is-casting .question-ring {
+.question-ring-core {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+}
+
+.question-landing.is-casting .question-ring-core {
   animation: question-compass-cast-rotate 1500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.question-ring::before,
-.question-ring::after {
+.question-ring-core::before,
+.question-ring-core::after {
   position: absolute;
   inset: 13%;
   border: 1px solid rgba(212, 178, 106, 0.14);
@@ -828,7 +856,7 @@ h3 {
   content: "";
 }
 
-.question-ring::after {
+.question-ring-core::after {
   inset: 31%;
   border-color: rgba(212, 178, 106, 0.18);
 }
@@ -841,20 +869,63 @@ h3 {
   letter-spacing: 0.14em;
 }
 
+.question-axis::before {
+  position: absolute;
+  width: 0;
+  height: 0;
+  content: "";
+}
+
 .question-axis.north {
   top: 28px;
+}
+
+.question-axis.north::before {
+  top: -17px;
+  left: 50%;
+  border-right: 5px solid transparent;
+  border-bottom: 12px solid rgba(212, 178, 106, 0.72);
+  border-left: 5px solid transparent;
+  transform: translateX(-50%);
 }
 
 .question-axis.east {
   right: 28px;
 }
 
+.question-axis.east::before {
+  top: 50%;
+  right: -17px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 12px solid rgba(212, 178, 106, 0.72);
+  transform: translateY(-50%);
+}
+
 .question-axis.south {
   bottom: 28px;
 }
 
+.question-axis.south::before {
+  bottom: -17px;
+  left: 50%;
+  border-top: 12px solid rgba(212, 178, 106, 0.72);
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  transform: translateX(-50%);
+}
+
 .question-axis.west {
   left: 28px;
+}
+
+.question-axis.west::before {
+  top: 50%;
+  left: -17px;
+  border-top: 5px solid transparent;
+  border-right: 12px solid rgba(212, 178, 106, 0.72);
+  border-bottom: 5px solid transparent;
+  transform: translateY(-50%);
 }
 
 .question-tick {
@@ -1174,6 +1245,7 @@ h3 {
 .question-hexagram-label {
   position: absolute;
   top: 16px;
+  right: 18px;
   left: 18px;
   margin: 0;
   color: var(--polaris);
@@ -1181,6 +1253,7 @@ h3 {
   font-weight: 820;
   letter-spacing: 0.14em;
   line-height: 1.2;
+  text-align: center;
   text-transform: uppercase;
 }
 
@@ -1518,13 +1591,13 @@ h3 {
 
   .question-compass-panel {
     align-items: center;
+    grid-template-rows: 74px minmax(0, 1fr);
     padding-left: 0;
     padding-bottom: 0;
   }
 
-  .question-panel-brand {
-    top: 24px;
-    left: 18px;
+  .question-panel-topbar {
+    width: calc(100% - 36px);
   }
 
   .question-form-panel {
@@ -1597,6 +1670,7 @@ h3 {
 
   .question-hexagram-label {
     top: 12px;
+    right: 12px;
     left: 12px;
     font-size: 0.56rem;
   }
@@ -1673,9 +1747,13 @@ h3 {
     grid-template-rows: 43% 57%;
   }
 
-  .question-panel-brand {
-    top: 22px;
-    left: 16px;
+  .question-panel-topbar {
+    width: calc(100% - 32px);
+    gap: 10px;
+  }
+
+  .question-topbar-date {
+    font-size: 0.58rem;
   }
 
   .question-compass-panel {
