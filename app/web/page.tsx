@@ -200,11 +200,13 @@ export default function WebPage() {
   const [isCasting, setIsCasting] = useState(false);
   const [isRevealing, setIsRevealing] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
+  const [isReleasing, setIsReleasing] = useState(false);
   const [hasLoadedCasting, setHasLoadedCasting] = useState(false);
   const castTimerRef = useRef<number | null>(null);
   const revealTimerRef = useRef<number | null>(null);
+  const releaseTimerRef = useRef<number | null>(null);
 
-  const capturedQuestion = question.trim() || 'Ask a question that will not leave you';
+  const capturedQuestion = question.trim() || 'Where am I in the river of life?';
   const mainHexagram = useMemo(() => getHexagram(lines.map((line) => line.value)), [lines]);
   const hasMovingLines = lines.some(
     (line) => line.kind === 'moving-yin' || line.kind === 'moving-yang',
@@ -240,6 +242,11 @@ export default function WebPage() {
     if (revealTimerRef.current) {
       window.clearTimeout(revealTimerRef.current);
       revealTimerRef.current = null;
+    }
+
+    if (releaseTimerRef.current) {
+      window.clearTimeout(releaseTimerRef.current);
+      releaseTimerRef.current = null;
     }
   }
 
@@ -281,6 +288,7 @@ export default function WebPage() {
     setIsCasting(false);
     setIsRevealing(false);
     setIsRevealed(false);
+    setIsReleasing(false);
     setAsked(true);
   }
 
@@ -305,12 +313,23 @@ export default function WebPage() {
     revealTimerRef.current = window.setTimeout(() => {
       setIsRevealed(true);
       setIsRevealing(false);
+      setIsReleasing(true);
       revealTimerRef.current = null;
+      releaseTimerRef.current = window.setTimeout(() => {
+        setIsReleasing(false);
+        releaseTimerRef.current = null;
+      }, 900);
     }, 2500);
   }, [isRevealed, isRevealing, lines.length]);
 
   return (
-    <main className={`question-landing${asked ? ' is-asking' : ''}`}>
+    <main
+      className={`question-landing${asked ? ' is-asking' : ''}${
+        asked && (!isRevealed || isReleasing) ? ' is-capturing' : ''
+      }${
+        isCasting ? ' is-casting' : ''
+      }`}
+    >
       <section className="question-stage" aria-labelledby="question-title">
         <div className="question-compass-panel" aria-label="Breathing compass">
           <a className="question-brand question-panel-brand" href="/">
@@ -324,8 +343,15 @@ export default function WebPage() {
               <span className="question-axis west">W</span>
               <span className="question-tick vertical" />
               <span className="question-tick horizontal" />
-              <span className={`question-dot${asked ? ' is-paused' : ''}`} />
-              <span className="question-breath-text" aria-hidden={asked}>
+              <span
+                className={`question-dot${
+                  asked && (!isRevealed || isReleasing) ? ' is-paused' : ''
+                }${isReleasing ? ' is-releasing' : ''}`}
+              />
+              <span
+                className="question-breath-text"
+                aria-hidden={asked && (!isRevealed || isReleasing)}
+              >
                 <span>Breath in 5.5s</span>
                 <span>Breath out 5.5s</span>
               </span>
@@ -363,6 +389,7 @@ export default function WebPage() {
                 setAsked(false);
                 setIsCasting(false);
                 setIsRevealing(false);
+                setIsReleasing(false);
               }}
               aria-label="Close answer sheet"
             >
@@ -370,10 +397,8 @@ export default function WebPage() {
             </button>
             <div className="question-sheet-content">
               <div className="question-sheet-meta">
-                <p>{formatCastTime(castTime)}</p>
-                <p>
-                  <span>Question:</span> {capturedQuestion}
-                </p>
+                <p className="question-sheet-time">{formatCastTime(castTime)}</p>
+                <p className="question-sheet-question">{capturedQuestion}</p>
               </div>
 
               <div className="question-hexagram-grid" aria-label="Hexagram placeholders">

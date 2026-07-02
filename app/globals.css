@@ -798,6 +798,7 @@ h3 {
   aspect-ratio: 1;
   display: grid;
   place-items: center;
+  perspective: 1000px;
 }
 
 .question-ring {
@@ -808,9 +809,14 @@ h3 {
   border-radius: 50%;
   display: grid;
   place-items: center;
+  transform-style: preserve-3d;
   box-shadow:
     0 0 0 1px rgba(212, 178, 106, 0.08) inset,
     0 0 44px rgba(212, 178, 106, 0.07);
+}
+
+.question-landing.is-casting .question-ring {
+  animation: question-compass-cast-rotate 1500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .question-ring::before,
@@ -929,6 +935,15 @@ h3 {
   animation: question-capture-points 900ms ease-out both;
 }
 
+.question-dot.is-releasing {
+  animation: question-release-to-breath 900ms ease-in-out both;
+}
+
+.question-dot.is-releasing::before,
+.question-dot.is-releasing::after {
+  animation: question-release-halo 900ms ease-in-out both;
+}
+
 .question-breath-text {
   position: absolute;
   top: calc(50% + 42px);
@@ -944,7 +959,7 @@ h3 {
   transition: opacity 420ms ease;
 }
 
-.question-landing.is-asking .question-breath-text {
+.question-landing.is-capturing .question-breath-text {
   opacity: 0;
 }
 
@@ -1088,24 +1103,28 @@ h3 {
 .question-sheet-meta {
   padding-right: 56px;
   display: grid;
-  gap: 8px;
+  gap: 10px;
   color: rgba(11, 19, 32, 0.78);
-  font-size: 0.94rem;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
 .question-sheet-meta p {
   margin-bottom: 0;
 }
 
-.question-sheet-meta p:first-child {
-  color: var(--midnight);
-  font-weight: 720;
+.question-sheet-time {
+  color: rgba(11, 19, 32, 0.42);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-.question-sheet-meta span {
+.question-sheet-question {
   color: var(--midnight);
-  font-weight: 800;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.25rem, 2.2vw, 1.8rem);
+  line-height: 1.25;
 }
 
 .question-hexagram-grid {
@@ -1305,6 +1324,20 @@ h3 {
   }
 }
 
+@keyframes question-compass-cast-rotate {
+  0% {
+    transform: rotateY(0deg) scale(1);
+  }
+
+  48% {
+    transform: rotateY(190deg) scale(1.012);
+  }
+
+  100% {
+    transform: rotateY(360deg) scale(1);
+  }
+}
+
 @keyframes question-cast-spin {
   to {
     transform: rotate(360deg);
@@ -1325,6 +1358,40 @@ h3 {
   100% {
     transform: scale(1.2);
     filter: brightness(1.22);
+  }
+}
+
+@keyframes question-release-to-breath {
+  0% {
+    transform: scale(1.2);
+    background: var(--polaris);
+    box-shadow:
+      0 0 10px rgba(251, 250, 246, 1),
+      0 0 30px rgba(212, 178, 106, 1),
+      0 0 76px rgba(212, 178, 106, 0.88),
+      0 0 148px rgba(246, 244, 239, 0.5),
+      0 0 210px rgba(79, 109, 138, 0.42);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.9);
+    background: var(--stone);
+    box-shadow:
+      0 0 18px rgba(246, 244, 239, 0.95),
+      0 0 44px rgba(212, 178, 106, 0.55),
+      0 0 86px rgba(79, 109, 138, 0.5);
+    opacity: 0.86;
+  }
+}
+
+@keyframes question-release-halo {
+  0% {
+    opacity: 0.84;
+  }
+
+  100% {
+    opacity: 0;
   }
 }
 
@@ -1498,8 +1565,15 @@ h3 {
 
   .question-sheet-meta {
     padding-right: 46px;
-    font-size: 0.84rem;
-    line-height: 1.4;
+    gap: 8px;
+  }
+
+  .question-sheet-time {
+    font-size: 0.62rem;
+  }
+
+  .question-sheet-question {
+    font-size: clamp(1rem, 4.5vw, 1.35rem);
   }
 
   .question-hexagram-grid {
