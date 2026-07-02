@@ -1207,17 +1207,62 @@ h3 {
 
 .question-hexagram-panel {
   position: relative;
-  min-height: 260px;
+  min-height: 320px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  background: transparent;
+  color: inherit;
+  cursor: default;
+  font: inherit;
+  perspective: 1000px;
+}
+
+.question-hexagram-panel:disabled {
+  cursor: default;
+}
+
+.question-hexagram-panel.is-clickable {
+  cursor: pointer;
+}
+
+.question-hexagram-card {
+  position: relative;
+  width: 100%;
+  min-height: inherit;
+  transform-style: preserve-3d;
+  transition: transform 680ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.question-hexagram-panel.is-flipped .question-hexagram-card {
+  transform: rotateY(180deg);
+}
+
+.question-hexagram-face {
+  position: absolute;
+  inset: 0;
   padding: 28px 24px;
   border: 1px solid rgba(11, 19, 32, 0.1);
   border-radius: var(--radius-md);
   display: grid;
   place-items: center;
   background: rgba(251, 250, 246, 0.48);
+  backface-visibility: hidden;
   transition: border-color 500ms ease, box-shadow 500ms ease, background 500ms ease;
 }
 
-.question-hexagram-panel.is-complete {
+.question-hexagram-back {
+  align-content: center;
+  gap: 12px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(212, 178, 106, 0.16), transparent 12rem),
+    rgba(251, 250, 246, 0.82);
+  transform: rotateY(180deg);
+}
+
+.question-hexagram-panel.is-complete .question-hexagram-face {
   border-color: rgba(212, 178, 106, 0.62);
   background:
     radial-gradient(circle at 50% 45%, rgba(212, 178, 106, 0.2), transparent 14rem),
@@ -1225,6 +1270,66 @@ h3 {
   box-shadow:
     0 0 0 1px rgba(212, 178, 106, 0.16) inset,
     0 0 42px rgba(212, 178, 106, 0.18);
+}
+
+.question-hexagram-back h3 {
+  max-width: 92%;
+  margin: 14px auto 0;
+  color: var(--midnight);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.12rem, 2vw, 1.55rem);
+  font-weight: 400;
+  line-height: 1.12;
+  text-align: center;
+}
+
+.question-hexagram-back p:not(.question-hexagram-label) {
+  max-width: 88%;
+  margin: 0 auto;
+  color: rgba(11, 19, 32, 0.68);
+  font-size: 0.88rem;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.question-flip-cue {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid rgba(212, 178, 106, 0.72);
+  border-radius: 50%;
+  display: block;
+  color: var(--polaris);
+  background: rgba(212, 178, 106, 0.08);
+  box-shadow:
+    0 0 10px rgba(212, 178, 106, 0.34),
+    0 0 24px rgba(212, 178, 106, 0.18),
+    inset 0 0 10px rgba(212, 178, 106, 0.12);
+  filter: drop-shadow(0 0 7px rgba(212, 178, 106, 0.48));
+}
+
+.question-flip-cue::before {
+  position: absolute;
+  inset: 7px;
+  border: 1px solid currentColor;
+  border-left-color: transparent;
+  border-radius: 50%;
+  content: "";
+}
+
+.question-flip-cue::after {
+  position: absolute;
+  top: 6px;
+  right: 7px;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 6px solid currentColor;
+  content: "";
+  transform: rotate(-28deg);
 }
 
 .question-hexagram-title {
@@ -1632,7 +1737,7 @@ h3 {
   }
 
   .question-sheet-content {
-    grid-template-rows: auto minmax(150px, 1fr) auto;
+    grid-template-rows: auto minmax(250px, 1fr) auto;
     gap: 14px;
   }
 
@@ -1654,8 +1759,36 @@ h3 {
   }
 
   .question-hexagram-panel {
-    min-height: 150px;
+    min-height: 250px;
+  }
+
+  .question-hexagram-face {
     padding: 18px 14px;
+  }
+
+  .question-hexagram-back h3 {
+    font-size: 0.92rem;
+  }
+
+  .question-hexagram-back p:not(.question-hexagram-label) {
+    font-size: 0.68rem;
+    line-height: 1.35;
+  }
+
+  .question-flip-cue {
+    right: 10px;
+    bottom: 10px;
+    width: 26px;
+    height: 26px;
+  }
+
+  .question-flip-cue::before {
+    inset: 6px;
+  }
+
+  .question-flip-cue::after {
+    top: 5px;
+    right: 6px;
   }
 
   .question-hexagram-bars {

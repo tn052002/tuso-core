@@ -107,6 +107,73 @@ const hexagramNames: Record<number, string> = {
   64: 'Before Completion',
 };
 
+const hexagramDescriptions: Record<number, string> = {
+  1: 'Heaven moves with tireless strength. Create with clarity, discipline, and right timing.',
+  2: 'Earth receives and nourishes. Yield, support, and let the path take form through devotion.',
+  3: 'Beginnings are tangled. Do not force completion; organize, gather help, and endure.',
+  4: 'Youthful uncertainty asks for learning. Ask sincerely once, then practice what is shown.',
+  5: 'Waiting is active trust. Nourish yourself and let the right moment arrive.',
+  6: 'Conflict warns against escalation. Seek fairness, clarity, and a wise mediator.',
+  7: 'Discipline gathers scattered force. Lead with order, responsibility, and restraint.',
+  8: 'Union forms around sincerity. Choose your alliances before the moment passes.',
+  9: 'Small restraint shapes great weather. Attend to details and soften force with refinement.',
+  10: 'Tread carefully near power. Courtesy and awareness let you pass without harm.',
+  11: 'Heaven and earth communicate. Use harmony generously while the gates are open.',
+  12: 'Heaven and earth separate. Preserve integrity while outer conditions are blocked.',
+  13: 'Fellowship widens the field. Shared purpose is stronger than private preference.',
+  14: 'Great possession asks for humility. Hold abundance by serving what is luminous.',
+  15: 'Modesty keeps balance. Reduce excess and the way becomes passable.',
+  16: 'Enthusiasm mobilizes people. Let rhythm, devotion, and timing gather movement.',
+  17: 'Following requires adaptation. Move with what is worthy, not what is merely loud.',
+  18: 'Something inherited needs repair. Name the decay, then patiently restore order.',
+  19: 'Approach brings influence. Come near with generosity before the season turns.',
+  20: 'Contemplation sees from above. Pause, observe, and become worthy of being seen.',
+  21: 'Biting through removes obstruction. Decide clearly and cut through confusion.',
+  22: 'Grace adorns substance. Beauty helps, but only when it serves the real.',
+  23: 'Splitting apart strips away the false. Do not push upward while the base is crumbling.',
+  24: 'Return begins quietly. A small renewal, protected, becomes the turning point.',
+  25: 'Innocence acts without contrivance. Stay natural and do not over-engineer the way.',
+  26: 'Great restraint stores power. Hold energy until it can serve something higher.',
+  27: 'Nourishment reveals character. Watch what you take in and what you feed in others.',
+  28: 'Great weight bends the beam. Extraordinary pressure calls for an extraordinary crossing.',
+  29: 'The abyss repeats. Move through danger by sincerity, practice, and steady heart.',
+  30: 'Clarity depends on what it clings to. Attach yourself to what gives true light.',
+  31: 'Influence moves through openness. Let attraction be mutual, subtle, and sincere.',
+  32: 'Duration is strength over time. Keep faith with the path and adjust without abandoning it.',
+  33: 'Retreat preserves the essential. Withdraw cleanly before force is wasted.',
+  34: 'Great power needs correctness. Strength without restraint becomes its own obstacle.',
+  35: 'Progress rises like the sun. Use visibility to serve, not to inflate the self.',
+  36: 'Light is hidden. Protect your clarity when the world cannot receive it.',
+  37: 'The family orders the inner world. Roles, care, and consistency create warmth.',
+  38: 'Opposition separates viewpoints. Difference can clarify when dignity is preserved.',
+  39: 'Obstruction redirects the journey. Turn inward, seek help, and stop attacking the wall.',
+  40: 'Release follows tension. Forgive, simplify, and move once the knot loosens.',
+  41: 'Decrease removes excess. Sacrifice what is unnecessary to strengthen what is true.',
+  42: 'Increase brings blessing. Use growth quickly and generously while the wind is favorable.',
+  43: 'Breakthrough must be declared. Speak truth firmly without falling into aggression.',
+  44: 'A powerful encounter arrives. Do not be seduced by what cannot be integrated.',
+  45: 'Gathering needs a center. Ritual, purpose, and leadership bring people together.',
+  46: 'Pushing upward is gradual ascent. Small sincere steps reach a high place.',
+  47: 'Oppression tests the spirit. Words may fail; inner truth must remain alive.',
+  48: 'The well is the shared source. Restore the vessel so nourishment can be drawn.',
+  49: 'Revolution changes the skin. Transformation is accepted when timing and trust are right.',
+  50: 'The cauldron refines raw material. Culture, offering, and transformation are underway.',
+  51: 'Shock awakens. Let the thunder pass through without losing the sacred vessel.',
+  52: 'Keeping still rests the mountain. Stop at the right place and the heart becomes quiet.',
+  53: 'Development proceeds like a tree. Growth is slow, rooted, and worthy of patience.',
+  54: 'The marrying maiden warns of imbalance. Accept limits and avoid forcing status.',
+  55: 'Abundance is noon. Shine fully, knowing fullness also begins decline.',
+  56: 'The wanderer survives by clarity. Be courteous, alert, and unattached while away from home.',
+  57: 'The gentle penetrates like wind. Repeated small influence shapes the field.',
+  58: 'Joy opens exchange. True pleasure is shared, sincere, and not careless.',
+  59: 'Dispersion dissolves separation. Cross the waters and reunite what has scattered.',
+  60: 'Limitation gives form. Boundaries become useful when they do not become bitterness.',
+  61: 'Inner truth reaches across distance. Sincerity moves what force cannot.',
+  62: 'Small preponderance favors humility. Attend to small duties; do not fly too high.',
+  63: 'After completion requires vigilance. When things are ordered, guard against decline.',
+  64: 'Before completion is almost across. Stay alert; the last step still matters.',
+};
+
 function ordinalDay(day: number) {
   if (day > 3 && day < 21) return `${day}th`;
 
@@ -212,6 +279,7 @@ export default function WebPage() {
   const [isReleasing, setIsReleasing] = useState(false);
   const [hasLoadedCasting, setHasLoadedCasting] = useState(false);
   const [today, setToday] = useState<Date | null>(null);
+  const [flippedHex, setFlippedHex] = useState({ primary: false, moving: false });
   const castTimerRef = useRef<number | null>(null);
   const revealTimerRef = useRef<number | null>(null);
   const releaseTimerRef = useRef<number | null>(null);
@@ -303,6 +371,7 @@ export default function WebPage() {
     setIsRevealing(false);
     setIsRevealed(false);
     setIsReleasing(false);
+    setFlippedHex({ primary: false, moving: false });
     setAsked(true);
   }
 
@@ -409,6 +478,7 @@ export default function WebPage() {
                 setIsCasting(false);
                 setIsRevealing(false);
                 setIsReleasing(false);
+                setFlippedHex({ primary: false, moving: false });
               }}
               aria-label="Close answer sheet"
             >
@@ -421,34 +491,92 @@ export default function WebPage() {
               </div>
 
               <div className="question-hexagram-grid" aria-label="Hexagram placeholders">
-                <div
-                  className={`question-hexagram-panel${displayMainHexagram ? ' is-complete' : ''}`}
+                <button
+                  className={`question-hexagram-panel${displayMainHexagram ? ' is-complete is-clickable' : ''}${
+                    flippedHex.primary ? ' is-flipped' : ''
+                  }`}
+                  type="button"
+                  onClick={() =>
+                    displayMainHexagram &&
+                    setFlippedHex((current) => ({ ...current, primary: !current.primary }))
+                  }
+                  disabled={!displayMainHexagram}
                 >
-                  <p className="question-hexagram-label">Primary Hexagram</p>
-                  <p className="question-hexagram-title">{mainTitle}</p>
-                  <div className="question-hexagram-bars" aria-hidden="true">
-                    {hexagramBars.map((bar) => (
-                      <span key={bar} className={getLineClass(lines[bar])} />
-                    ))}
+                  <div className="question-hexagram-card">
+                    <div className="question-hexagram-face question-hexagram-front">
+                      <p className="question-hexagram-label">Primary Hexagram</p>
+                      <p className="question-hexagram-title">{mainTitle}</p>
+                      <div className="question-hexagram-bars" aria-hidden="true">
+                        {hexagramBars.map((bar) => (
+                          <span key={bar} className={getLineClass(lines[bar])} />
+                        ))}
+                      </div>
+                      <span className="question-line-counter">{lines.length} / 6</span>
+                      {displayMainHexagram ? (
+                        <span className="question-flip-cue" aria-hidden="true" />
+                      ) : null}
+                    </div>
+                    <div className="question-hexagram-face question-hexagram-back">
+                      <p className="question-hexagram-label">Primary Hexagram</p>
+                      <h3>
+                        #{displayMainHexagram?.number} {displayMainHexagram?.name}
+                      </h3>
+                      <p>
+                        {displayMainHexagram
+                          ? hexagramDescriptions[displayMainHexagram.number]
+                          : ''}
+                      </p>
+                      {displayMainHexagram ? (
+                        <span className="question-flip-cue" aria-hidden="true" />
+                      ) : null}
+                    </div>
                   </div>
-                  <span className="question-line-counter">{lines.length} / 6</span>
-                </div>
-                <div
-                  className={`question-hexagram-panel${displayChangedHexagram ? ' is-complete' : ''}`}
+                </button>
+                <button
+                  className={`question-hexagram-panel${displayChangedHexagram ? ' is-complete is-clickable' : ''}${
+                    flippedHex.moving ? ' is-flipped' : ''
+                  }`}
+                  type="button"
+                  onClick={() =>
+                    displayChangedHexagram &&
+                    setFlippedHex((current) => ({ ...current, moving: !current.moving }))
+                  }
+                  disabled={!displayChangedHexagram}
                 >
-                  <p className="question-hexagram-label">Moving Hexagram</p>
-                  <p className="question-hexagram-title">{changedTitle}</p>
-                  <div className="question-hexagram-bars changed" aria-hidden="true">
-                    {hexagramBars.map((bar) => (
-                      <span
-                        key={bar}
-                        className={
-                          displayChangedHexagram ? getLineClass(lines[bar], true, false) : ''
-                        }
-                      />
-                    ))}
+                  <div className="question-hexagram-card">
+                    <div className="question-hexagram-face question-hexagram-front">
+                      <p className="question-hexagram-label">Moving Hexagram</p>
+                      <p className="question-hexagram-title">{changedTitle}</p>
+                      <div className="question-hexagram-bars changed" aria-hidden="true">
+                        {hexagramBars.map((bar) => (
+                          <span
+                            key={bar}
+                            className={
+                              displayChangedHexagram ? getLineClass(lines[bar], true, false) : ''
+                            }
+                          />
+                        ))}
+                      </div>
+                      {displayChangedHexagram ? (
+                        <span className="question-flip-cue" aria-hidden="true" />
+                      ) : null}
+                    </div>
+                    <div className="question-hexagram-face question-hexagram-back">
+                      <p className="question-hexagram-label">Moving Hexagram</p>
+                      <h3>
+                        #{displayChangedHexagram?.number} {displayChangedHexagram?.name}
+                      </h3>
+                      <p>
+                        {displayChangedHexagram
+                          ? hexagramDescriptions[displayChangedHexagram.number]
+                          : ''}
+                      </p>
+                      {displayChangedHexagram ? (
+                        <span className="question-flip-cue" aria-hidden="true" />
+                      ) : null}
+                    </div>
                   </div>
-                </div>
+                </button>
               </div>
 
               <div className="question-sheet-actions">
