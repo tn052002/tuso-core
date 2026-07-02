@@ -12,7 +12,13 @@ export function HexagramLines({ changed = false, lines, showChangedLines = false
       {hexagramBars.map((bar) => (
         <span
           key={bar}
-          className={showChangedLines ? getLineClass(lines[bar], true, false) : getLineClass(lines[bar])}
+          className={
+            changed
+              ? showChangedLines
+                ? getLineClass(lines[bar], true, false)
+                : ''
+              : getLineClass(lines[bar])
+          }
         />
       ))}
     </div>

@@ -37,6 +37,8 @@ export function CastingSheet({
   onToggleMoving,
   onTogglePrimary,
 }: CastingSheetProps) {
+  const castButtonText = lines.length >= 6 ? 'See what this mean to YOU' : 'Cast';
+
   return (
     <div className="question-answer-sheet" aria-hidden={!asked}>
       <button
@@ -84,7 +86,7 @@ export function CastingSheet({
             {isCasting || isRevealing ? (
               <span className="question-cast-spinner" aria-label="Casting" />
             ) : (
-              'Cast'
+              castButtonText
             )}
           </button>
         </div>

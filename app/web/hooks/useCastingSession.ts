@@ -42,6 +42,7 @@ export function useCastingSession() {
   const castTimerRef = useRef<number | null>(null);
   const revealTimerRef = useRef<number | null>(null);
   const releaseTimerRef = useRef<number | null>(null);
+  const autoFlipTimerRef = useRef<number | null>(null);
 
   const capturedQuestion = question.trim() || 'Where am I in the river of life?';
   const mainHexagram = useMemo(() => getHexagram(lines.map((line) => line.value)), [lines]);
@@ -84,6 +85,11 @@ export function useCastingSession() {
     if (releaseTimerRef.current) {
       window.clearTimeout(releaseTimerRef.current);
       releaseTimerRef.current = null;
+    }
+
+    if (autoFlipTimerRef.current) {
+      window.clearTimeout(autoFlipTimerRef.current);
+      autoFlipTimerRef.current = null;
     }
   }
 
@@ -178,6 +184,12 @@ export function useCastingSession() {
         setIsReleasing(false);
         releaseTimerRef.current = null;
       }, 900);
+      autoFlipTimerRef.current = window.setTimeout(() => {
+        setFlippedHex((current) =>
+          current.primary ? current : { ...current, primary: true },
+        );
+        autoFlipTimerRef.current = null;
+      }, 500);
     }, 2500);
   }, [isRevealed, isRevealing, lines.length]);
 

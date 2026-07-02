@@ -775,12 +775,12 @@
 @keyframes question-breathe-dot {
   0%,
   100% {
-    transform: scale(0.82);
-    opacity: 0.78;
+    transform: scale(0.68);
+    opacity: 0.72;
   }
 
   50% {
-    transform: scale(1.28);
+    transform: scale(1.48);
     opacity: 1;
   }
 }
@@ -836,13 +836,13 @@
   }
 
   100% {
-    transform: scale(0.9);
+    transform: scale(0.68);
     background: var(--stone);
     box-shadow:
       0 0 18px rgba(246, 244, 239, 0.95),
       0 0 44px rgba(212, 178, 106, 0.55),
       0 0 86px rgba(79, 109, 138, 0.5);
-    opacity: 0.86;
+    opacity: 0.72;
   }
 }
 
