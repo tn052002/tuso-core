@@ -1,4 +1,5 @@
-import { Hexagram, hexagramDescriptions } from '../lib/iching';
+import type { HexagramText } from '../i18n/hexagrams';
+import { Hexagram } from '../lib/iching';
 import { HexagramLines } from './HexagramLines';
 import { CastLine } from '../lib/iching';
 
@@ -6,6 +7,7 @@ type HexagramCardProps = {
   changed?: boolean;
   counter?: string;
   hexagram: Hexagram | null;
+  hexagrams: Record<number, HexagramText>;
   isFlipped: boolean;
   label: string;
   lines: CastLine[];
@@ -17,6 +19,7 @@ export function HexagramCard({
   changed = false,
   counter,
   hexagram,
+  hexagrams,
   isFlipped,
   label,
   lines,
@@ -24,6 +27,7 @@ export function HexagramCard({
   title,
 }: HexagramCardProps) {
   const isAvailable = Boolean(hexagram);
+  const hexagramText = hexagram ? hexagrams[hexagram.number] : null;
 
   return (
     <button
@@ -45,9 +49,9 @@ export function HexagramCard({
         <div className="question-hexagram-face question-hexagram-back">
           <p className="question-hexagram-label">{label}</p>
           <h3>
-            #{hexagram?.number} {hexagram?.name}
+            #{hexagram?.number} {hexagramText?.name}
           </h3>
-          <p>{hexagram ? hexagramDescriptions[hexagram.number] : ''}</p>
+          <p>{hexagramText?.description ?? ''}</p>
           {isAvailable ? <span className="question-flip-cue" aria-hidden="true" /> : null}
         </div>
       </div>

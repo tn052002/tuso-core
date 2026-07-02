@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { castLine, CastLine, getHexagram, lineLabels } from '../lib/iching';
+import type { HexagramText } from '../i18n/hexagrams';
+import type { WebCopy } from '../i18n/locales';
+import { castLine, CastLine, getHexagram } from '../lib/iching';
 
 const STORAGE_KEY = 'tuso-web-casting-session';
 
@@ -28,7 +30,7 @@ function getSavedCasting() {
   }
 }
 
-export function useCastingSession() {
+export function useCastingSession(copy: WebCopy, hexagrams: Record<number, HexagramText>) {
   const [asked, setAsked] = useState(false);
   const [question, setQuestion] = useState('');
   const [castTime, setCastTime] = useState(() => new Date());
@@ -44,7 +46,7 @@ export function useCastingSession() {
   const releaseTimerRef = useRef<number | null>(null);
   const autoFlipTimerRef = useRef<number | null>(null);
 
-  const capturedQuestion = question.trim() || 'Where am I in the river of life?';
+  const capturedQuestion = question.trim() || copy.defaultQuestion;
   const mainHexagram = useMemo(() => getHexagram(lines.map((line) => line.value)), [lines]);
   const hasMovingLines = lines.some(
     (line) => line.kind === 'moving-yin' || line.kind === 'moving-yang',
@@ -53,23 +55,24 @@ export function useCastingSession() {
     () => (hasMovingLines ? getHexagram(lines.map((line) => line.changingValue)) : null),
     [hasMovingLines, lines],
   );
-  const currentLineLabel = lines.length > 0 ? lineLabels[lines[lines.length - 1].kind] : 'Ready';
+  const currentLineLabel =
+    lines.length > 0 ? copy.lineLabels[lines[lines.length - 1].kind] : copy.ready;
   const displayMainHexagram = isRevealed ? mainHexagram : null;
   const displayChangedHexagram = isRevealed ? changedHexagram : null;
   const mainTitle = isRevealing
-    ? 'Forming...'
+    ? copy.forming
     : displayMainHexagram
-      ? `#${displayMainHexagram.number} ${displayMainHexagram.name}`
+      ? `#${displayMainHexagram.number} ${hexagrams[displayMainHexagram.number].name}`
       : currentLineLabel;
   const changedTitle = isRevealing
-    ? 'Forming...'
+    ? copy.forming
     : displayChangedHexagram
-      ? `#${displayChangedHexagram.number} ${displayChangedHexagram.name}`
+      ? `#${displayChangedHexagram.number} ${hexagrams[displayChangedHexagram.number].name}`
       : isRevealed && lines.length === 6
-        ? 'No Moving'
+        ? copy.noMoving
         : hasMovingLines
-          ? 'Changing hexagram'
-          : 'Waiting';
+          ? copy.changingHexagram
+          : copy.waiting;
 
   function clearCastingTimers() {
     if (castTimerRef.current) {

@@ -1,0 +1,87 @@
+import { hexagramDescriptions, hexagramNames } from '../lib/iching';
+import type { WebLocale } from './locales';
+
+export type HexagramText = {
+  name: string;
+  description: string;
+};
+
+const englishHexagrams = Object.fromEntries(
+  Object.entries(hexagramNames).map(([number, name]) => [
+    Number(number),
+    {
+      name,
+      description: hexagramDescriptions[Number(number)],
+    },
+  ]),
+) as Record<number, HexagramText>;
+
+export const hexagramText: Record<WebLocale, Record<number, HexagramText>> = {
+  en: englishHexagrams,
+  vi: {
+    1: { name: 'Sáng Tạo', description: 'Trời chuyển động bền bỉ. Hãy sáng tạo với sự rõ ràng, kỷ luật và đúng thời.' },
+    2: { name: 'Tiếp Nhận', description: 'Đất tiếp nhận và nuôi dưỡng. Hãy mềm lại, nâng đỡ, và để con đường tự thành hình.' },
+    3: { name: 'Khó Khăn Ban Đầu', description: 'Khởi đầu còn rối ren. Đừng ép hoàn tất; hãy sắp xếp, gọi sự trợ giúp, và bền bỉ.' },
+    4: { name: 'Non Trẻ', description: 'Sự chưa biết cần học hỏi. Hỏi một cách thành thật, rồi thực hành điều được chỉ ra.' },
+    5: { name: 'Chờ Đợi', description: 'Chờ đợi là niềm tin đang hành động. Nuôi dưỡng bản thân và để đúng thời điểm đến.' },
+    6: { name: 'Tranh Chấp', description: 'Xung đột cảnh báo việc leo thang. Tìm sự công bằng, rõ ràng, và một người hòa giải khôn ngoan.' },
+    7: { name: 'Đạo Quân', description: 'Kỷ luật gom lại sức mạnh phân tán. Dẫn dắt bằng trật tự, trách nhiệm, và tiết chế.' },
+    8: { name: 'Gắn Kết', description: 'Sự liên kết hình thành quanh lòng chân thành. Chọn đồng minh trước khi thời cơ qua đi.' },
+    9: { name: 'Tiểu Súc', description: 'Sự tiết chế nhỏ uốn nên thời tiết lớn. Chạm vào chi tiết và làm mềm sức ép bằng tinh tế.' },
+    10: { name: 'Bước Đi', description: 'Đi cẩn trọng gần quyền lực. Lễ độ và tỉnh thức giúp bạn đi qua mà không tổn hại.' },
+    11: { name: 'Thái Bình', description: 'Trời đất giao hòa. Hãy dùng hòa khí một cách rộng rãi khi cánh cửa đang mở.' },
+    12: { name: 'Bế Tắc', description: 'Trời đất tách rời. Giữ trọn phẩm chất khi điều kiện bên ngoài đang đóng lại.' },
+    13: { name: 'Đồng Nhân', description: 'Tình đồng hành mở rộng cánh đồng. Mục đích chung mạnh hơn ý thích riêng.' },
+    14: { name: 'Đại Hữu', description: 'Sở hữu lớn cần khiêm nhường. Giữ sự đủ đầy bằng cách phục vụ điều sáng rõ.' },
+    15: { name: 'Khiêm Tốn', description: 'Khiêm tốn giữ cân bằng. Bớt phần dư thừa và con đường trở nên có thể đi qua.' },
+    16: { name: 'Hứng Khởi', description: 'Nhiệt huyết làm con người chuyển động. Để nhịp, lòng tin, và thời điểm gom thành động lực.' },
+    17: { name: 'Đi Theo', description: 'Theo đuổi cần thích nghi. Đi với điều xứng đáng, không phải điều chỉ ồn ào.' },
+    18: { name: 'Sửa Điều Hư Hỏng', description: 'Có điều kế thừa cần được sửa. Gọi tên sự mục nát, rồi kiên nhẫn khôi phục trật tự.' },
+    19: { name: 'Tiến Gần', description: 'Tiến gần mang ảnh hưởng. Đến gần bằng lòng rộng mở trước khi mùa đổi chiều.' },
+    20: { name: 'Quan Sát', description: 'Quan sát nhìn từ trên cao. Dừng lại, thấy rõ, và trở nên xứng đáng để được nhìn thấy.' },
+    21: { name: 'Cắn Qua', description: 'Cắn qua vật cản. Quyết định rõ ràng và cắt qua sự lẫn lộn.' },
+    22: { name: 'Vẻ Đẹp', description: 'Vẻ đẹp trang sức cho cốt lõi. Cái đẹp hữu ích khi nó phục vụ điều thật.' },
+    23: { name: 'Bóc Tách', description: 'Bóc tách lấy đi điều giả. Đừng cố vươn lên khi nền móng đang vỡ.' },
+    24: { name: 'Trở Về', description: 'Trở về bắt đầu rất khẽ. Một mầm mới nhỏ, được bảo vệ, sẽ thành điểm xoay.' },
+    25: { name: 'Vô Vọng', description: 'Sự tự nhiên hành động không mưu tính. Hãy thật tự nhiên và đừng thiết kế quá mức con đường.' },
+    26: { name: 'Đại Súc', description: 'Tiết chế lớn tích trữ sức mạnh. Giữ năng lượng đến khi nó phục vụ điều cao hơn.' },
+    27: { name: 'Nuôi Dưỡng', description: 'Nuôi dưỡng bộc lộ tính cách. Nhìn điều bạn đưa vào và điều bạn nuôi trong người khác.' },
+    28: { name: 'Quá Nặng', description: 'Sức nặng lớn làm cong cây xà. Áp lực phi thường cần một lần vượt qua phi thường.' },
+    29: { name: 'Vực Sâu', description: 'Nguy hiểm lặp lại. Đi qua bằng sự chân thành, luyện tập, và trái tim vững.' },
+    30: { name: 'Bám Sáng', description: 'Ánh sáng cần biết bám vào đâu. Gắn mình với điều trao ánh sáng thật.' },
+    31: { name: 'Cảm Ứng', description: 'Ảnh hưởng đến qua sự mở lòng. Để sự hấp dẫn có qua có lại, tinh tế và chân thành.' },
+    32: { name: 'Bền Lâu', description: 'Bền lâu là sức mạnh theo thời gian. Giữ lòng với đường đi và điều chỉnh mà không bỏ cuộc.' },
+    33: { name: 'Thoái Lui', description: 'Thoái lui giữ điều cốt yếu. Lui lại gọn gàng trước khi sức lực bị lãng phí.' },
+    34: { name: 'Đại Tráng', description: 'Sức mạnh lớn cần chính đáng. Mạnh mà không tiết chế sẽ thành vật cản của chính nó.' },
+    35: { name: 'Tiến Lên', description: 'Tiến triển mọc như mặt trời. Dùng sự hiển lộ để phục vụ, không phóng đại bản ngã.' },
+    36: { name: 'Ánh Sáng Bị Che', description: 'Ánh sáng đang ẩn mình. Bảo vệ sự rõ biết khi thế giới chưa thể tiếp nhận.' },
+    37: { name: 'Gia Đình', description: 'Gia đình sắp xếp thế giới bên trong. Vai trò, chăm sóc, và đều đặn tạo nên hơi ấm.' },
+    38: { name: 'Đối Lập', description: 'Đối lập tách các góc nhìn. Khác biệt có thể làm rõ khi nhân phẩm được giữ.' },
+    39: { name: 'Trở Ngại', description: 'Trở ngại đổi hướng hành trình. Quay vào trong, tìm trợ giúp, và dừng tấn công bức tường.' },
+    40: { name: 'Giải Thoát', description: 'Giải tỏa đến sau căng thẳng. Tha thứ, đơn giản hóa, và đi tiếp khi nút thắt lỏng ra.' },
+    41: { name: 'Giảm Bớt', description: 'Giảm bớt lấy đi phần thừa. Hy sinh điều không cần để làm mạnh điều thật.' },
+    42: { name: 'Tăng Trưởng', description: 'Tăng trưởng mang phước lành. Dùng sự lớn lên nhanh và rộng rãi khi gió đang thuận.' },
+    43: { name: 'Đột Phá', description: 'Đột phá cần được tuyên bố. Nói sự thật vững vàng mà không rơi vào công kích.' },
+    44: { name: 'Gặp Gỡ', description: 'Một cuộc gặp mạnh xuất hiện. Đừng bị quyến rũ bởi điều không thể hòa nhập.' },
+    45: { name: 'Quy Tụ', description: 'Quy tụ cần một trung tâm. Nghi thức, mục đích, và dẫn dắt đưa con người lại gần.' },
+    46: { name: 'Thăng Lên', description: 'Thăng lên là bước tiến dần dần. Những bước nhỏ chân thành đạt đến nơi cao.' },
+    47: { name: 'Khốn Cùng', description: 'Bị ép buộc thử thách tinh thần. Lời nói có thể bất lực; sự thật bên trong phải còn sống.' },
+    48: { name: 'Giếng Nước', description: 'Giếng là nguồn chung. Sửa lại chiếc bình để sự nuôi dưỡng có thể được rút lên.' },
+    49: { name: 'Cách Mạng', description: 'Biến đổi thay lớp da cũ. Chuyển hóa được chấp nhận khi đúng thời và có niềm tin.' },
+    50: { name: 'Đỉnh', description: 'Cái đỉnh tinh luyện vật liệu thô. Văn hóa, hiến dâng, và chuyển hóa đang diễn ra.' },
+    51: { name: 'Chấn Động', description: 'Sấm sét đánh thức. Để tiếng sấm đi qua mà không đánh mất bình thiêng.' },
+    52: { name: 'Dừng Yên', description: 'Núi nghỉ ở đúng chỗ. Dừng lại đúng nơi và trái tim trở nên yên.' },
+    53: { name: 'Phát Triển', description: 'Phát triển như một cái cây. Tăng trưởng chậm, có rễ, và xứng đáng với kiên nhẫn.' },
+    54: { name: 'Quy Muội', description: 'Người em gái lấy chồng cảnh báo mất cân bằng. Chấp nhận giới hạn và đừng ép địa vị.' },
+    55: { name: 'Thịnh Vượng', description: 'Thịnh vượng là chính ngọ. Hãy tỏa sáng trọn vẹn, biết rằng đầy cũng bắt đầu suy.' },
+    56: { name: 'Lữ Khách', description: 'Người lữ hành sống bằng sự rõ biết. Lịch thiệp, tỉnh táo, và không bám chấp khi xa nhà.' },
+    57: { name: 'Tốn Như Gió', description: 'Sự mềm mại thấm vào như gió. Ảnh hưởng nhỏ lặp lại uốn nên cánh đồng.' },
+    58: { name: 'Hoan Hỷ', description: 'Niềm vui mở ra trao đổi. Vui thật là cùng chia sẻ, chân thành, và không cẩu thả.' },
+    59: { name: 'Tan Ra', description: 'Tan ra làm tan sự chia cách. Vượt qua dòng nước và hợp lại điều đã phân tán.' },
+    60: { name: 'Tiết Độ', description: 'Giới hạn tạo hình. Ranh giới hữu ích khi nó không hóa thành cay đắng.' },
+    61: { name: 'Trung Phu', description: 'Sự thật bên trong vượt qua khoảng cách. Chân thành chuyển động điều sức mạnh không làm được.' },
+    62: { name: 'Tiểu Quá', description: 'Vượt nhỏ thuận cho khiêm nhường. Chăm việc nhỏ; đừng bay quá cao.' },
+    63: { name: 'Đã Hoàn Thành', description: 'Sau hoàn tất cần cảnh giác. Khi mọi thứ đã vào trật tự, hãy coi chừng suy giảm.' },
+    64: { name: 'Chưa Hoàn Thành', description: 'Chưa hoàn tất là gần qua sông. Hãy tỉnh táo; bước cuối vẫn quan trọng.' },
+  },
+};

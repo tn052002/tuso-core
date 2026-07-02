@@ -1,4 +1,6 @@
 import { formatCastTime } from '../lib/date';
+import type { HexagramText } from '../i18n/hexagrams';
+import type { WebCopy, WebLocale } from '../i18n/locales';
 import { CastLine, Hexagram } from '../lib/iching';
 import { HexagramCard } from './HexagramCard';
 
@@ -7,11 +9,14 @@ type CastingSheetProps = {
   castTime: Date;
   changedTitle: string;
   capturedQuestion: string;
+  copy: WebCopy;
   displayChangedHexagram: Hexagram | null;
   displayMainHexagram: Hexagram | null;
   flippedHex: { primary: boolean; moving: boolean };
+  hexagrams: Record<number, HexagramText>;
   isCasting: boolean;
   isRevealing: boolean;
+  locale: WebLocale;
   lines: CastLine[];
   mainTitle: string;
   onCast: () => void;
@@ -25,11 +30,14 @@ export function CastingSheet({
   castTime,
   capturedQuestion,
   changedTitle,
+  copy,
   displayChangedHexagram,
   displayMainHexagram,
   flippedHex,
+  hexagrams,
   isCasting,
   isRevealing,
+  locale,
   lines,
   mainTitle,
   onCast,
@@ -37,7 +45,7 @@ export function CastingSheet({
   onToggleMoving,
   onTogglePrimary,
 }: CastingSheetProps) {
-  const castButtonText = lines.length >= 6 ? 'See what this mean to YOU' : 'Cast';
+  const castButtonText = lines.length >= 6 ? copy.finalCta : copy.cast;
 
   return (
     <div className="question-answer-sheet" aria-hidden={!asked}>
@@ -45,22 +53,23 @@ export function CastingSheet({
         className="question-sheet-close"
         type="button"
         onClick={onClose}
-        aria-label="Close answer sheet"
+        aria-label={copy.closeSheet}
       >
         ×
       </button>
       <div className="question-sheet-content">
         <div className="question-sheet-meta">
-          <p className="question-sheet-time">{formatCastTime(castTime)}</p>
+          <p className="question-sheet-time">{formatCastTime(castTime, locale)}</p>
           <p className="question-sheet-question">{capturedQuestion}</p>
         </div>
 
-        <div className="question-hexagram-grid" aria-label="Hexagram placeholders">
+        <div className="question-hexagram-grid" aria-label={copy.hexagramGridLabel}>
           <HexagramCard
             counter={`${lines.length} / 6`}
             hexagram={displayMainHexagram}
+            hexagrams={hexagrams}
             isFlipped={flippedHex.primary}
-            label="Primary Hexagram"
+            label={copy.primaryHexagram}
             lines={lines}
             onToggle={onTogglePrimary}
             title={mainTitle}
@@ -68,8 +77,9 @@ export function CastingSheet({
           <HexagramCard
             changed
             hexagram={displayChangedHexagram}
+            hexagrams={hexagrams}
             isFlipped={flippedHex.moving}
-            label="Moving Hexagram"
+            label={copy.movingHexagram}
             lines={lines}
             onToggle={onToggleMoving}
             title={changedTitle}
@@ -84,7 +94,7 @@ export function CastingSheet({
             disabled={isCasting || isRevealing || lines.length >= 6}
           >
             {isCasting || isRevealing ? (
-              <span className="question-cast-spinner" aria-label="Casting" />
+              <span className="question-cast-spinner" aria-label={copy.casting} />
             ) : (
               castButtonText
             )}

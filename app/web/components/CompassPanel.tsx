@@ -1,22 +1,44 @@
 import { formatTopbarDate } from '../lib/date';
+import type { WebCopy, WebLocale } from '../i18n/locales';
 
 type CompassPanelProps = {
   asked: boolean;
+  copy: WebCopy;
   isRevealed: boolean;
   isReleasing: boolean;
+  locale: WebLocale;
+  onToggleLocale: () => void;
   today: Date | null;
 };
 
-export function CompassPanel({ asked, isRevealed, isReleasing, today }: CompassPanelProps) {
+export function CompassPanel({
+  asked,
+  copy,
+  isRevealed,
+  isReleasing,
+  locale,
+  onToggleLocale,
+  today,
+}: CompassPanelProps) {
   const isCaptured = asked && (!isRevealed || isReleasing);
 
   return (
-    <div className="question-compass-panel" aria-label="Breathing compass">
+    <div className="question-compass-panel" aria-label={copy.compassLabel}>
       <div className="question-panel-topbar">
         <a className="question-brand" href="/">
           TUSO
         </a>
-        <span className="question-topbar-date">{today ? formatTopbarDate(today) : ''}</span>
+        <span className="question-topbar-date">
+          {today ? formatTopbarDate(today, locale) : ''}
+        </span>
+        <button
+          className="question-locale-toggle"
+          type="button"
+          onClick={onToggleLocale}
+          aria-label={copy.localeToggleLabel}
+        >
+          {locale === 'en' ? 'VI' : 'EN'}
+        </button>
       </div>
       <div className="question-compass">
         <div className="question-ring" aria-hidden="true">
@@ -33,8 +55,8 @@ export function CompassPanel({ asked, isRevealed, isReleasing, today }: CompassP
               }`}
             />
             <span className="question-breath-text" aria-hidden={isCaptured}>
-              <span>Breath in 5.5s</span>
-              <span>Breath out 5.5s</span>
+              <span>{copy.breathIn}</span>
+              <span>{copy.breathOut}</span>
             </span>
           </div>
         </div>

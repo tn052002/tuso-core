@@ -88,6 +88,30 @@
   text-transform: uppercase;
 }
 
+.question-locale-toggle {
+  justify-self: end;
+  min-width: 42px;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid rgba(212, 178, 106, 0.44);
+  border-radius: 999px;
+  background: rgba(246, 244, 239, 0.04);
+  color: rgba(246, 244, 239, 0.72);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 780;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: border-color 240ms ease, color 240ms ease, background 240ms ease;
+}
+
+.question-locale-toggle:hover {
+  border-color: rgba(212, 178, 106, 0.82);
+  background: rgba(212, 178, 106, 0.1);
+  color: var(--polaris);
+}
+
 .question-form-panel {
   position: relative;
   overflow: hidden;

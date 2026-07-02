@@ -1,3 +1,5 @@
+import type { WebLocale } from '../i18n/locales';
+
 export function ordinalDay(day: number) {
   if (day > 3 && day < 21) return `${day}th`;
 
@@ -13,21 +15,31 @@ export function ordinalDay(day: number) {
   }
 }
 
-export function formatCastTime(date: Date) {
-  const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
-  const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date);
+export function formatCastTime(date: Date, locale: WebLocale) {
+  const intlLocale = locale === 'vi' ? 'vi-VN' : 'en-US';
+  const weekday = new Intl.DateTimeFormat(intlLocale, { weekday: 'long' }).format(date);
+  const month = new Intl.DateTimeFormat(intlLocale, { month: 'short' }).format(date);
   const year = date.getFullYear();
   const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
 
+  if (locale === 'vi') {
+    return `${weekday}, ${date.getDate()} ${month}, ${year} ${hours}:${minutes}`;
+  }
+
   return `${weekday}, ${month} ${ordinalDay(date.getDate())}, ${year} ${hours}:${minutes}`;
 }
 
-export function formatTopbarDate(date: Date) {
-  const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
-  const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date);
+export function formatTopbarDate(date: Date, locale: WebLocale) {
+  const intlLocale = locale === 'vi' ? 'vi-VN' : 'en-US';
+  const weekday = new Intl.DateTimeFormat(intlLocale, { weekday: 'long' }).format(date);
+  const month = new Intl.DateTimeFormat(intlLocale, { month: 'short' }).format(date);
   const day = date.getDate();
   const year = date.getFullYear();
+
+  if (locale === 'vi') {
+    return `${day} ${month}, ${year} - ${weekday}`;
+  }
 
   return `${month} ${day}, ${year} - ${weekday}`;
 }
