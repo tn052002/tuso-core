@@ -1,89 +1,104 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { CastingSheet } from './components/CastingSheet';
-import { CompassPanel } from './components/CompassPanel';
+import { Compass } from './components/Compass';
 import { QuestionForm } from './components/QuestionForm';
-import { useCastingSession } from './hooks/useCastingSession';
+import { TopBar } from './components/TopBar';
 import { hexagramText } from './i18n/hexagrams';
-import { getNextLocale, webCopy, WebLocale } from './i18n/locales';
-
-const LOCALE_STORAGE_KEY = 'tuso-web-locale';
+import { webCopy } from './i18n/locales';
+import { AppShell } from './shell/AppShell';
+import { saveCasting } from './store/persistence';
+import { getCastingView } from './store/selectors';
+import { useTusoStore } from './store/useTusoStore';
 
 export function WebOracle() {
-  const [locale, setLocale] = useState<WebLocale>('en');
-  const [today, setToday] = useState<Date | null>(null);
+  const state = useTusoStore();
+  const { casting, locale, shell, today } = state;
   const copy = webCopy[locale];
   const hexagrams = hexagramText[locale];
-  const casting = useCastingSession(copy, hexagrams);
+  const castingView = getCastingView(state, copy, hexagrams);
+  const isCapturing = casting.asked && (!casting.isRevealed || casting.isReleasing);
 
   useEffect(() => {
-    setToday(new Date());
+    state.setToday(new Date());
+    state.hydrateFromStorage();
 
-    const savedLocale = window.localStorage.getItem(LOCALE_STORAGE_KEY);
-
-    if (savedLocale === 'en' || savedLocale === 'vi') {
-      setLocale(savedLocale);
-    }
+    return state.clearCastingTimers;
   }, []);
 
-  function toggleLocale() {
-    setLocale((currentLocale) => {
-      const nextLocale = getNextLocale(currentLocale);
+  useEffect(() => {
+    if (!casting.hasHydrated) return;
 
-      window.localStorage.setItem(LOCALE_STORAGE_KEY, nextLocale);
-
-      return nextLocale;
+    saveCasting({
+      asked: casting.asked,
+      question: casting.question,
+      castTime: casting.castTime?.toISOString() ?? null,
+      lines: casting.lines,
+      isRevealed: casting.isRevealed,
     });
-  }
+  }, [
+    casting.asked,
+    casting.castTime,
+    casting.hasHydrated,
+    casting.isRevealed,
+    casting.lines,
+    casting.question,
+  ]);
 
   return (
-    <main
-      className={`question-landing${casting.asked ? ' is-asking' : ''}${
-        casting.asked && (!casting.isRevealed || casting.isReleasing) ? ' is-capturing' : ''
-      }${casting.isCasting ? ' is-casting' : ''}`}
-    >
-      <section className="question-stage" aria-labelledby="question-title">
-        <CompassPanel
+    <AppShell
+      bottomContent={
+        <QuestionForm
           asked={casting.asked}
           copy={copy}
-          isRevealed={casting.isRevealed}
-          isReleasing={casting.isReleasing}
-          locale={locale}
-          onToggleLocale={toggleLocale}
-          today={today}
+          onAsk={state.openCastingSheet}
+          question={casting.question}
+          setQuestion={state.setQuestion}
         />
-
-        <div className="question-form-panel">
-          <QuestionForm
-            asked={casting.asked}
+      }
+      bottomSheet={
+        <CastingSheet
+          asked={casting.asked}
+          castTime={casting.castTime}
+          capturedQuestion={castingView.capturedQuestion}
+          changedTitle={castingView.changedTitle}
+          copy={copy}
+          displayChangedHexagram={castingView.displayChangedHexagram}
+          displayMainHexagram={castingView.displayMainHexagram}
+          flippedHex={casting.flippedHex}
+          hexagrams={hexagrams}
+          isCasting={casting.isCasting}
+          isRevealing={casting.isRevealing}
+          locale={locale}
+          lines={casting.lines}
+          mainTitle={castingView.mainTitle}
+          onCast={state.handleCast}
+          onClose={state.closeCastingSheet}
+          onToggleMoving={state.toggleMovingHexagram}
+          onTogglePrimary={state.togglePrimaryHexagram}
+        />
+      }
+      copy={copy}
+      isAsking={casting.asked}
+      isCapturing={isCapturing}
+      isCasting={casting.isCasting}
+      shell={shell}
+      topContent={
+        <>
+          <TopBar
             copy={copy}
-            onAsk={casting.openCastingSheet}
-            question={casting.question}
-            setQuestion={casting.setQuestion}
-          />
-          <CastingSheet
-            asked={casting.asked}
-            castTime={casting.castTime}
-            capturedQuestion={casting.capturedQuestion}
-            changedTitle={casting.changedTitle}
-            copy={copy}
-            displayChangedHexagram={casting.displayChangedHexagram}
-            displayMainHexagram={casting.displayMainHexagram}
-            flippedHex={casting.flippedHex}
-            hexagrams={hexagrams}
-            isCasting={casting.isCasting}
-            isRevealing={casting.isRevealing}
             locale={locale}
-            lines={casting.lines}
-            mainTitle={casting.mainTitle}
-            onCast={casting.handleCast}
-            onClose={casting.closeCastingSheet}
-            onToggleMoving={casting.toggleMovingHexagram}
-            onTogglePrimary={casting.togglePrimaryHexagram}
+            onToggleLocale={state.toggleLocale}
+            today={today}
           />
-        </div>
-      </section>
-    </main>
+          <Compass
+            copy={copy}
+            isCaptured={isCapturing}
+            isReleasing={casting.isReleasing}
+          />
+        </>
+      }
+    />
   );
 }

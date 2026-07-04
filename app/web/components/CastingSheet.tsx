@@ -6,7 +6,7 @@ import { HexagramCard } from './HexagramCard';
 
 type CastingSheetProps = {
   asked: boolean;
-  castTime: Date;
+  castTime: Date | null;
   changedTitle: string;
   capturedQuestion: string;
   copy: WebCopy;
@@ -59,7 +59,9 @@ export function CastingSheet({
       </button>
       <div className="question-sheet-content">
         <div className="question-sheet-meta">
-          <p className="question-sheet-time">{formatCastTime(castTime, locale)}</p>
+          <p className="question-sheet-time">
+            {castTime ? formatCastTime(castTime, locale) : ''}
+          </p>
           <p className="question-sheet-question">{capturedQuestion}</p>
         </div>
 

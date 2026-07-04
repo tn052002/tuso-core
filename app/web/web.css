@@ -119,6 +119,16 @@
   padding-right: 32px;
 }
 
+.app-sheet-host {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.app-sheet-host > * {
+  pointer-events: auto;
+}
+
 .question-compass {
   width: min(72vw, 440px);
   aspect-ratio: 1;

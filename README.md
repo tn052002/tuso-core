@@ -36,16 +36,25 @@ app/
   app/page.tsx               Placeholder app route
   web/
     page.tsx                 /web route entry
-    WebOracle.tsx            /web orchestration component
+    WebOracle.tsx            /web store-to-shell composition bridge
     web.css                  /web-only layout, animation, and component styles
+    shell/
+      AppShell.tsx           Living app shell: top half, bottom half, sheets
+      TopHalf.tsx            Top screen container
+      BottomHalf.tsx         Bottom screen container
+      SheetHost.tsx          Generic top/bottom sheet container
+      sheetTypes.ts          Sheet modes and active context types
     components/
-      CompassPanel.tsx       Brand/date/language toggle/breathing compass
+      TopBar.tsx             Brand/date/language toggle
+      Compass.tsx            Interactive breathing compass
       QuestionForm.tsx       Question prompt, textarea, main CTA
       CastingSheet.tsx       Casting panel, metadata, cards, cast CTA
       HexagramCard.tsx       Flip-card container for one hexagram
       HexagramLines.tsx      Six-line visual renderer
-    hooks/
-      useCastingSession.ts   Casting flow state, timers, persistence
+    store/
+      useTusoStore.ts        Zustand app state, actions, runtime timers
+      selectors.ts           Derived presentation state
+      persistence.ts         local/session storage IO
     i18n/
       locales.ts             UI copy for en/vi
       hexagrams.ts           Hexagram names/descriptions for en/vi
@@ -56,10 +65,15 @@ app/
 
 ## Presentation Layer
 
-Presentation is mostly isolated to `/app/web/components` plus `/app/web/web.css`.
+Presentation is split between `/app/web/shell`, `/app/web/components`, and `/app/web/web.css`.
 
-- `WebOracle.tsx` composes the page and passes state/copy down.
-- `CompassPanel.tsx` renders the topbar, date, language toggle, compass ring, breathing dot, and breathing cues.
+- `WebOracle.tsx` connects Zustand state to localized copy, derived selectors, and shell slots.
+- `AppShell.tsx` is the living object container. It owns the stable screen regions: top half, bottom half, top sheet, and bottom sheet.
+- `TopHalf.tsx` holds the topbar and compass region.
+- `BottomHalf.tsx` holds contextual bottom content.
+- `SheetHost.tsx` provides top/bottom sheet positions and sheet modes: hidden, collapsed, half, full.
+- `TopBar.tsx` renders brand, date, and language toggle.
+- `Compass.tsx` renders the compass ring, breathing dot, and breathing cues.
 - `QuestionForm.tsx` renders the user prompt area.
 - `CastingSheet.tsx` renders the casting workflow panel and action button.
 - `HexagramCard.tsx` renders each flippable hexagram card.
@@ -74,6 +88,7 @@ There is no backend yet. All current data is local and client-side.
 
 - `i18n/locales.ts` contains UI copy for `en` and `vi`.
 - `i18n/hexagrams.ts` contains localized hexagram names and descriptions.
+- `store/persistence.ts` is the storage boundary for data that can later move to a server database.
 - `lib/iching.ts` contains the structural I Ching data and logic:
   - line types: `yin`, `yang`, `moving-yin`, `moving-yang`
   - random line casting
@@ -86,10 +101,19 @@ Current persistence uses browser storage:
 
 - Selected locale is stored under `tuso-web-locale`.
 - Casting session is stored under `tuso-web-casting-session` in both `localStorage` and `sessionStorage`.
+- Zustand hydrates from browser storage on `/web` load.
+- Runtime-only animation state and timer refs are not persisted.
 
 ## State Model
 
-The main state engine is `useCastingSession.ts`.
+The main state engine is `store/useTusoStore.ts`, powered by Zustand.
+
+Shell state:
+
+- `topSheet`: hidden, collapsed, half, or full.
+- `bottomSheet`: hidden, collapsed, half, or full.
+- `activeContext`: question, casting, or result.
+- The current UI maps the question prompt to the bottom half and the casting workflow to the bottom sheet.
 
 Core state:
 
@@ -101,9 +125,12 @@ Core state:
 - `isRevealing`: true during the final forming pause after six lines.
 - `isRevealed`: true once final hexagram results should be visible.
 - `isReleasing`: short state for returning the compass from capture glow to breathing.
+- `hasHydrated`: true after Zustand has loaded browser storage.
 - `flippedHex`: independent flip state for primary and moving hexagram cards.
 
 Derived state:
+
+Derived presentation data lives in `store/selectors.ts`.
 
 - `capturedQuestion`: trimmed question or localized default question.
 - `mainHexagram`: primary hexagram calculated from the six original line values.
@@ -118,6 +145,7 @@ Timed behavior:
 - After six lines, final forming pause takes `2500ms`.
 - Compass release animation runs for `900ms`.
 - Primary card auto-flips `500ms` after reveal.
+- Timer refs live outside persisted data inside the store module.
 
 ## Interaction Flow
 
