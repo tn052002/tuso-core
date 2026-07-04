@@ -21,6 +21,7 @@ type CastingSheetProps = {
   mainTitle: string;
   onCast: () => void;
   onClose: () => void;
+  onPersonalReading: () => void;
   onToggleMoving: () => void;
   onTogglePrimary: () => void;
 };
@@ -42,10 +43,13 @@ export function CastingSheet({
   mainTitle,
   onCast,
   onClose,
+  onPersonalReading,
   onToggleMoving,
   onTogglePrimary,
 }: CastingSheetProps) {
-  const castButtonText = lines.length >= 6 ? copy.finalCta : copy.cast;
+  const isComplete = lines.length >= 6;
+  const castButtonText = isComplete ? copy.finalCta : copy.cast;
+  const isLoading = isCasting || isRevealing;
 
   return (
     <div className="question-answer-sheet" aria-hidden={!asked}>
@@ -92,10 +96,10 @@ export function CastingSheet({
           <button
             className="question-cast-button"
             type="button"
-            onClick={onCast}
-            disabled={isCasting || isRevealing || lines.length >= 6}
+            onClick={isComplete ? onPersonalReading : onCast}
+            disabled={isLoading}
           >
-            {isCasting || isRevealing ? (
+            {isLoading ? (
               <span className="question-cast-spinner" aria-label={copy.casting} />
             ) : (
               castButtonText

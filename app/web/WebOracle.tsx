@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { CastingSheet } from './components/CastingSheet';
 import { Compass } from './components/Compass';
+import { PersonalReadingSheet } from './components/PersonalReadingSheet';
 import { QuestionForm } from './components/QuestionForm';
 import { TopBar } from './components/TopBar';
 import { hexagramText } from './i18n/hexagrams';
@@ -14,7 +15,7 @@ import { useTusoStore } from './store/useTusoStore';
 
 export function WebOracle() {
   const state = useTusoStore();
-  const { casting, locale, shell, today } = state;
+  const { casting, locale, personalReading, shell, today } = state;
   const copy = webCopy[locale];
   const hexagrams = hexagramText[locale];
   const castingView = getCastingView(state, copy, hexagrams);
@@ -77,6 +78,7 @@ export function WebOracle() {
           mainTitle={castingView.mainTitle}
           onCast={state.handleCast}
           onClose={state.closeCastingSheet}
+          onPersonalReading={state.openPersonalReadingSheet}
           onToggleMoving={state.toggleMovingHexagram}
           onTogglePrimary={state.togglePrimaryHexagram}
         />
@@ -99,6 +101,17 @@ export function WebOracle() {
             isReleasing={casting.isReleasing}
           />
         </>
+      }
+      topSheet={
+        <PersonalReadingSheet
+          blueprintSelected={personalReading.blueprintSelected}
+          copy={copy}
+          meaningSelected={personalReading.meaningSelected}
+          onBlueprintChange={state.setPersonalBlueprintSelected}
+          onClose={state.closePersonalReadingSheet}
+          onContinue={state.closePersonalReadingSheet}
+          onMeaningChange={state.setPersonalMeaningSelected}
+        />
       }
     />
   );

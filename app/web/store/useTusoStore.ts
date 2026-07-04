@@ -20,12 +20,21 @@ type CastingState = {
   };
 };
 
+type PersonalReadingState = {
+  blueprintSelected: boolean;
+  meaningSelected: boolean;
+};
+
 type TusoStoreActions = {
   clearCastingTimers: () => void;
   closeCastingSheet: () => void;
+  closePersonalReadingSheet: () => void;
   handleCast: () => void;
   hydrateFromStorage: () => void;
   openCastingSheet: () => void;
+  openPersonalReadingSheet: () => void;
+  setPersonalBlueprintSelected: (selected: boolean) => void;
+  setPersonalMeaningSelected: (selected: boolean) => void;
   setQuestion: (question: string) => void;
   setSheetMode: (position: SheetPosition, mode: SheetMode) => void;
   setToday: (today: Date) => void;
@@ -39,6 +48,7 @@ export type TusoStoreState = {
   today: Date | null;
   shell: AppShellState;
   casting: CastingState;
+  personalReading: PersonalReadingState;
 };
 
 type TusoStore = TusoStoreState & TusoStoreActions;
@@ -76,11 +86,17 @@ const initialCasting: CastingState = {
   },
 };
 
+const initialPersonalReading: PersonalReadingState = {
+  blueprintSelected: true,
+  meaningSelected: true,
+};
+
 export const useTusoStore = create<TusoStore>((set, get) => ({
   locale: 'en',
   today: null,
   shell: initialShell,
   casting: initialCasting,
+  personalReading: initialPersonalReading,
 
   clearCastingTimers() {
     clearTimer(castTimer);
@@ -98,6 +114,7 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
     set((state) => ({
       shell: {
         ...state.shell,
+        topSheet: 'hidden',
         bottomSheet: 'hidden',
         activeContext: 'question',
       },
@@ -111,6 +128,16 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
           primary: false,
           moving: false,
         },
+      },
+    }));
+  },
+
+  closePersonalReadingSheet() {
+    set((state) => ({
+      shell: {
+        ...state.shell,
+        topSheet: 'hidden',
+        activeContext: state.casting.isRevealed ? 'result' : state.shell.activeContext,
       },
     }));
   },
@@ -221,6 +248,7 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
     set((state) => ({
       shell: {
         ...state.shell,
+        topSheet: 'hidden',
         bottomSheet: 'half',
         activeContext: 'casting',
       },
@@ -237,6 +265,45 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
           primary: false,
           moving: false,
         },
+      },
+    }));
+  },
+
+  openPersonalReadingSheet() {
+    const { casting } = get();
+
+    if (!casting.isRevealed || casting.lines.length < 6) return;
+
+    set((state) => ({
+      shell: {
+        ...state.shell,
+        topSheet: 'half',
+        activeContext: 'personal',
+      },
+      personalReading: {
+        ...state.personalReading,
+        blueprintSelected: true,
+        meaningSelected: true,
+      },
+    }));
+  },
+
+  setPersonalBlueprintSelected(selected) {
+    set((state) => ({
+      personalReading: {
+        ...state.personalReading,
+        blueprintSelected: selected,
+        meaningSelected: selected ? state.personalReading.meaningSelected : false,
+      },
+    }));
+  },
+
+  setPersonalMeaningSelected(selected) {
+    set((state) => ({
+      personalReading: {
+        ...state.personalReading,
+        meaningSelected: selected,
+        blueprintSelected: selected ? true : state.personalReading.blueprintSelected,
       },
     }));
   },

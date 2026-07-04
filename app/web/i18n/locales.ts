@@ -20,6 +20,20 @@ export type WebCopy = {
   cast: string;
   casting: string;
   finalCta: string;
+  personalReadingTitle: string;
+  personalReadingStepForm: string;
+  personalReadingStepLaw: string;
+  personalReadingStepAction: string;
+  personalReadingStepFormHelp: string;
+  personalReadingStepLawHelp: string;
+  personalReadingStepActionHelp: string;
+  personalBlueprintPackage: string;
+  personalBlueprintPrice: string;
+  personalBlueprintDescription: string;
+  personalMeaningPackage: string;
+  personalMeaningPrice: string;
+  personalMeaningDescription: string;
+  personalReadingContinue: string;
   ready: string;
   forming: string;
   noMoving: string;
@@ -47,6 +61,20 @@ export const webCopy: Record<WebLocale, WebCopy> = {
     cast: 'Cast',
     casting: 'Casting',
     finalCta: 'See what this mean to YOU',
+    personalReadingTitle: 'Personal Reading',
+    personalReadingStepForm: 'Tượng',
+    personalReadingStepLaw: 'Lý',
+    personalReadingStepAction: 'Nhân',
+    personalReadingStepFormHelp: 'Form complete',
+    personalReadingStepLawHelp: 'Law complete',
+    personalReadingStepActionHelp: 'Action current',
+    personalBlueprintPackage: 'Personal Blueprint',
+    personalBlueprintPrice: 'Free',
+    personalBlueprintDescription: 'Keep the cast as your personal pattern entry.',
+    personalMeaningPackage: 'Personal Meaning',
+    personalMeaningPrice: '10k VND',
+    personalMeaningDescription: 'Translate this result into guidance for your current question.',
+    personalReadingContinue: 'Continue',
     ready: 'Ready',
     forming: 'Forming...',
     noMoving: 'No Moving',
@@ -77,6 +105,20 @@ export const webCopy: Record<WebLocale, WebCopy> = {
     cast: 'Gieo',
     casting: 'Đang gieo',
     finalCta: 'Xem điều này có nghĩa gì với BẠN',
+    personalReadingTitle: 'Bản đọc cá nhân',
+    personalReadingStepForm: 'Tượng',
+    personalReadingStepLaw: 'Lý',
+    personalReadingStepAction: 'Nhân',
+    personalReadingStepFormHelp: 'Hình tượng đã hoàn thành',
+    personalReadingStepLawHelp: 'Lý đã hoàn thành',
+    personalReadingStepActionHelp: 'Nhân là bước hiện tại',
+    personalBlueprintPackage: 'Personal Blueprint',
+    personalBlueprintPrice: 'Miễn phí',
+    personalBlueprintDescription: 'Lưu quẻ gieo như một mốc khuôn mẫu cá nhân.',
+    personalMeaningPackage: 'Personal Meaning',
+    personalMeaningPrice: '10k VND',
+    personalMeaningDescription: 'Diễn giải kết quả này thành hướng đi cho câu hỏi hiện tại.',
+    personalReadingContinue: 'Tiếp tục',
     ready: 'Sẵn sàng',
     forming: 'Đang kết thành...',
     noMoving: 'Không có hào động',
