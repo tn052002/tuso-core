@@ -30,7 +30,9 @@ export function AppShell({
 }: AppShellProps) {
   return (
     <main
-      className={`question-landing${isAsking ? ' is-asking' : ''}${
+      className={`question-landing top-${shell.topSheet} bottom-${shell.bottomSheet}${
+        isAsking ? ' is-asking' : ''
+      }${
         isCapturing ? ' is-capturing' : ''
       }${isCasting ? ' is-casting' : ''}`}
       data-active-context={shell.activeContext}

@@ -52,9 +52,11 @@ export function WebOracle() {
         <QuestionForm
           asked={casting.asked}
           copy={copy}
+          locale={locale}
           onAsk={state.openCastingSheet}
           question={casting.question}
           setQuestion={state.setQuestion}
+          today={today}
         />
       }
       bottomSheet={
@@ -90,7 +92,6 @@ export function WebOracle() {
             copy={copy}
             locale={locale}
             onToggleLocale={state.toggleLocale}
-            today={today}
           />
           <Compass
             copy={copy}

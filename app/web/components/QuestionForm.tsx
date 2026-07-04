@@ -1,17 +1,28 @@
-import type { WebCopy } from '../i18n/locales';
+import type { WebCopy, WebLocale } from '../i18n/locales';
+import { formatTopbarDate } from '../lib/date';
 
 type QuestionFormProps = {
   asked: boolean;
   copy: WebCopy;
+  locale: WebLocale;
   onAsk: () => void;
   question: string;
   setQuestion: (question: string) => void;
+  today: Date | null;
 };
 
-export function QuestionForm({ asked, copy, onAsk, question, setQuestion }: QuestionFormProps) {
+export function QuestionForm({
+  asked,
+  copy,
+  locale,
+  onAsk,
+  question,
+  setQuestion,
+  today,
+}: QuestionFormProps) {
   return (
     <div className="question-form">
-      <p className="question-eyebrow">{copy.questionEyebrow}</p>
+      <p className="question-form-date">{today ? formatTopbarDate(today, locale) : ''}</p>
       <h1 id="question-title">{copy.questionTitle}</h1>
       <textarea
         className="question-textarea"

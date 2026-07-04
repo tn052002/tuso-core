@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { AppShellState } from '../shell/sheetTypes';
+import type { AppShellState, SheetMode, SheetPosition } from '../shell/sheetTypes';
 import { getNextLocale, type WebLocale } from '../i18n/locales';
 import { castLine, type CastLine } from '../lib/iching';
 import { loadCasting, loadLocale, saveLocale } from './persistence';
@@ -27,6 +27,7 @@ type TusoStoreActions = {
   hydrateFromStorage: () => void;
   openCastingSheet: () => void;
   setQuestion: (question: string) => void;
+  setSheetMode: (position: SheetPosition, mode: SheetMode) => void;
   setToday: (today: Date) => void;
   toggleLocale: () => void;
   toggleMovingHexagram: () => void;
@@ -220,7 +221,7 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
     set((state) => ({
       shell: {
         ...state.shell,
-        bottomSheet: 'full',
+        bottomSheet: 'half',
         activeContext: 'casting',
       },
       casting: {
@@ -246,6 +247,31 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
         ...state.casting,
         question,
       },
+    }));
+  },
+
+  setSheetMode(position: SheetPosition, mode: SheetMode) {
+    set((state) => ({
+      shell: (() => {
+        const nextShell = {
+          ...state.shell,
+          activeContext: mode === 'hidden' ? state.shell.activeContext : 'question',
+          [position === 'top' ? 'topSheet' : 'bottomSheet']: mode,
+        };
+        const oppositeKey = position === 'top' ? 'bottomSheet' : 'topSheet';
+        const oppositeMode = nextShell[oppositeKey];
+        const bothVisible = mode !== 'hidden' && oppositeMode !== 'hidden';
+
+        if (bothVisible && mode === 'full' && oppositeMode !== 'collapsed') {
+          nextShell[oppositeKey] = 'collapsed';
+        }
+
+        if (bothVisible && oppositeMode === 'full' && mode !== 'collapsed') {
+          nextShell[oppositeKey] = 'collapsed';
+        }
+
+        return nextShell;
+      })(),
     }));
   },
 

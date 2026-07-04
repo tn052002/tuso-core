@@ -9,6 +9,7 @@ type CompassProps = {
 export function Compass({ copy, isCaptured, isReleasing }: CompassProps) {
   return (
     <div className="question-compass">
+      <span className="question-compass-prompt">{copy.questionEyebrow}</span>
       <div className="question-ring" aria-hidden="true">
         <div className="question-ring-core">
           <span className="question-axis north">N</span>
