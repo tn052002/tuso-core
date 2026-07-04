@@ -4,20 +4,36 @@ TUSO Core is a Next.js prototype for exploring the TUSO product direction. The c
 
 This document summarizes the current codebase for product and design handoff.
 
+## Update Notes
+
+### 2026-07-04 12:10 +07 - Sheet Interaction Model
+
+- `/web/test` now exercises the real `AppShell`, `SheetHost`, `Compass`, and Zustand sheet state instead of a standalone mock shell.
+- Top/left and bottom/right sheets support `hidden`, `collapsed`, `half`, and `full` modes with controller UI for visual testing.
+- When both sheets are visible, opening one sheet as `full` collapses the other sheet and the full sheet occupies the remaining screen space.
+- The real `/web` ask flow now opens the casting sheet in `half` mode through `bottomSheet`, using the same shell-driven sheet behavior.
+
+### 2026-07-04 11:58 +07 - Compass Prompt And Date Placement
+
+- The breathing prompt now appears above the compass in the top half, preserving the gold eyebrow visual treatment.
+- The current date now appears above the question title in the bottom half, preserving the smaller muted date visual treatment.
+- `TopBar.tsx` now focuses on brand and language controls; `Compass.tsx` owns the compass prompt; `QuestionForm.tsx` owns the localized date display.
+
 ## Current Routes
 
 - `/` is a visual direction and moodboard reference page.
 - `/app` is still a placeholder route.
 - `/web` is the active Oracle landing and casting experience.
+- `/web/test` is the shell visual test route for top/bottom regions and top/bottom sheet modes.
 
 ## Product Experience On `/web`
 
 The `/web` page is a full-screen two-panel experience:
 
-- Left/top panel: TUSO brand, current date, language toggle, and breathing compass.
-- Right/bottom panel: question prompt, textarea, CTA, and the casting sheet.
+- Left/top panel: TUSO brand, language toggle, breathing prompt, and breathing compass.
+- Right/bottom panel: current date, question prompt, textarea, CTA, and the casting sheet.
 - The user can ask a question or leave the field empty. Empty questions use a localized default question.
-- Clicking the CTA opens a full panel sheet for casting.
+- Clicking the CTA opens a half-height sheet for casting.
 - Each cast produces one I Ching line after a short loading pause.
 - Six casts form the primary hexagram.
 - If any line is moving, the changing hexagram is calculated and shown on the second card.
@@ -45,9 +61,9 @@ app/
       SheetHost.tsx          Generic top/bottom sheet container
       sheetTypes.ts          Sheet modes and active context types
     components/
-      TopBar.tsx             Brand/date/language toggle
-      Compass.tsx            Interactive breathing compass
-      QuestionForm.tsx       Question prompt, textarea, main CTA
+      TopBar.tsx             Brand and language toggle
+      Compass.tsx            Interactive breathing compass and breathing prompt
+      QuestionForm.tsx       Current date, question prompt, textarea, main CTA
       CastingSheet.tsx       Casting panel, metadata, cards, cast CTA
       HexagramCard.tsx       Flip-card container for one hexagram
       HexagramLines.tsx      Six-line visual renderer
@@ -72,9 +88,9 @@ Presentation is split between `/app/web/shell`, `/app/web/components`, and `/app
 - `TopHalf.tsx` holds the topbar and compass region.
 - `BottomHalf.tsx` holds contextual bottom content.
 - `SheetHost.tsx` provides top/bottom sheet positions and sheet modes: hidden, collapsed, half, full.
-- `TopBar.tsx` renders brand, date, and language toggle.
-- `Compass.tsx` renders the compass ring, breathing dot, and breathing cues.
-- `QuestionForm.tsx` renders the user prompt area.
+- `TopBar.tsx` renders brand and language toggle.
+- `Compass.tsx` renders the compass ring, breathing prompt, breathing dot, and breathing cues.
+- `QuestionForm.tsx` renders the current date and user prompt area.
 - `CastingSheet.tsx` renders the casting workflow panel and action button.
 - `HexagramCard.tsx` renders each flippable hexagram card.
 - `HexagramLines.tsx` renders the six bars from bottom to top using line classes from `iching.ts`.
