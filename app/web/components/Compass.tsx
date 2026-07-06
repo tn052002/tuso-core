@@ -21,10 +21,10 @@ export function Compass({
   const holdTimerRef = useRef<number | null>(null);
   const [isHolding, setIsHolding] = useState(false);
   const compassActions = [
-    { className: 'north', direction: 'N', label: 'Compass' },
-    { className: 'east', direction: 'E', label: 'Blueprint' },
-    { className: 'south', direction: 'S', label: 'Practice' },
-    { className: 'west', direction: 'W', label: 'Oracle' },
+    { className: 'north', direction: 'N', subtitle: 'My Nature', title: 'Me' },
+    { className: 'east', direction: 'E', subtitle: 'My Cycles', title: 'Season' },
+    { className: 'south', direction: 'S', subtitle: 'Living in Alignment', title: 'Actions' },
+    { className: 'west', direction: 'W', subtitle: 'Past & Future', title: 'Moments' },
   ];
 
   const clearHold = useCallback(() => {
@@ -49,7 +49,7 @@ export function Compass({
 
   return (
     <div className="question-compass">
-      {/* <span className="question-compass-prompt">{copy.questionEyebrow}</span> */}
+      <span className="question-compass-prompt">{copy.questionEyebrow}</span>
       <div
         className={`question-ring${isHolding ? ' is-holding' : ''}`}
         role="button"
@@ -82,10 +82,10 @@ export function Compass({
           </span>
         </div>
       </div>
-      <div className="question-compass-hold-cue" aria-hidden="true">
+      {/* <div className="question-compass-hold-cue" aria-hidden="true">
         <span className="question-hold-icon" />
         <span>{copy.compassHoldLabel}</span>
-      </div>
+      </div> */}
       <div className="question-compass-actions" aria-label="Compass navigation">
         {compassActions.map((action) => (
           <button
@@ -96,7 +96,10 @@ export function Compass({
             <span className="question-axis-icon" aria-hidden="true">
               {action.direction}
             </span>
-            <span className="question-axis-label">{action.label}</span>
+            <span className="question-axis-label">
+              <strong>{action.title}</strong>
+              <small>{action.subtitle}</small>
+            </span>
           </button>
         ))}
       </div>
