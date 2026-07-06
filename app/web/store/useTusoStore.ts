@@ -33,8 +33,9 @@ export type PersonalInfo = {
 type PersonalReadingState = {
   blueprintSelected: boolean;
   info: PersonalInfo;
+  isCalculating: boolean;
   meaningSelected: boolean;
-  step: 'selection' | 'info';
+  step: 'selection' | 'info' | 'action';
 };
 
 type TusoStoreActions = {
@@ -47,6 +48,7 @@ type TusoStoreActions = {
   openCastingSheet: () => void;
   openPersonalReadingSheet: () => void;
   continuePersonalReading: () => void;
+  continuePersonalInfo: () => void;
   setPersonalBlueprintSelected: (selected: boolean) => void;
   setPersonalInfoField: (field: keyof PersonalInfo, value: string) => void;
   setPersonalMeaningSelected: (selected: boolean) => void;
@@ -74,6 +76,8 @@ let releaseTimer: number | null = null;
 let autoFlipTimer: number | null = null;
 let quickCastTimer: number | null = null;
 let personalStepTimer: number | null = null;
+let personalCalculationTimer: number | null = null;
+let personalActionTimer: number | null = null;
 
 function clearTimer(timer: number | null) {
   if (timer) {
@@ -114,6 +118,7 @@ const initialPersonalReading: PersonalReadingState = {
     birthPlace: '',
     gender: '',
   },
+  isCalculating: false,
   meaningSelected: true,
   step: 'selection',
 };
@@ -132,12 +137,16 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
     clearTimer(autoFlipTimer);
     clearTimer(quickCastTimer);
     clearTimer(personalStepTimer);
+    clearTimer(personalCalculationTimer);
+    clearTimer(personalActionTimer);
     castTimer = null;
     revealTimer = null;
     releaseTimer = null;
     autoFlipTimer = null;
     quickCastTimer = null;
     personalStepTimer = null;
+    personalCalculationTimer = null;
+    personalActionTimer = null;
   },
 
   closeCastingSheet() {
@@ -166,7 +175,11 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
 
   closePersonalReadingSheet() {
     clearTimer(personalStepTimer);
+    clearTimer(personalCalculationTimer);
+    clearTimer(personalActionTimer);
     personalStepTimer = null;
+    personalCalculationTimer = null;
+    personalActionTimer = null;
 
     set((state) => ({
       shell: {
@@ -175,11 +188,20 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
         bottomSheet: state.casting.isRevealed ? 'half' : state.shell.bottomSheet,
         activeContext: state.casting.isRevealed ? 'result' : state.shell.activeContext,
       },
+      personalReading: {
+        ...state.personalReading,
+        isCalculating: false,
+      },
     }));
   },
 
   continuePersonalReading() {
     clearTimer(personalStepTimer);
+    clearTimer(personalCalculationTimer);
+    clearTimer(personalActionTimer);
+    personalStepTimer = null;
+    personalCalculationTimer = null;
+    personalActionTimer = null;
 
     set((state) => ({
       shell: {
@@ -205,6 +227,56 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
       }));
       personalStepTimer = null;
     }, 760);
+  },
+
+  continuePersonalInfo() {
+    const { personalReading } = get();
+
+    if (personalReading.step !== 'info' || personalReading.isCalculating) return;
+
+    clearTimer(personalCalculationTimer);
+    clearTimer(personalActionTimer);
+    personalCalculationTimer = null;
+    personalActionTimer = null;
+
+    set((state) => ({
+      personalReading: {
+        ...state.personalReading,
+        isCalculating: true,
+      },
+    }));
+
+    personalCalculationTimer = window.setTimeout(() => {
+      set((state) => ({
+        shell: {
+          ...state.shell,
+          topSheet: 'hidden',
+          bottomSheet: 'collapsed',
+          activeContext: 'personal',
+        },
+        personalReading: {
+          ...state.personalReading,
+          isCalculating: false,
+        },
+      }));
+      personalCalculationTimer = null;
+
+      personalActionTimer = window.setTimeout(() => {
+        set((state) => ({
+          shell: {
+            ...state.shell,
+            topSheet: 'full',
+            bottomSheet: 'collapsed',
+            activeContext: 'personal',
+          },
+          personalReading: {
+            ...state.personalReading,
+            step: 'action',
+          },
+        }));
+        personalActionTimer = null;
+      }, 760);
+    }, 2400);
   },
 
   handleCast() {
@@ -469,6 +541,7 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
         ...state.personalReading,
         blueprintSelected: true,
         meaningSelected: true,
+        isCalculating: false,
         step: 'selection',
       },
     }));

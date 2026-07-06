@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { CastResultSummary } from './components/CastResultSummary';
 import { CastingSheet } from './components/CastingSheet';
 import { Compass } from './components/Compass';
+import { PersonalActionSheet } from './components/PersonalActionSheet';
 import { PersonalInfoSheet } from './components/PersonalInfoSheet';
 import { PersonalReadingSheet } from './components/PersonalReadingSheet';
 import { QuestionForm } from './components/QuestionForm';
@@ -118,12 +119,18 @@ export function WebOracle() {
         </>
       }
       topSheet={
-        personalReading.step === 'info' ? (
+        personalReading.step === 'action' ? (
+          <PersonalActionSheet
+            copy={copy}
+            onClose={state.closePersonalReadingSheet}
+          />
+        ) : personalReading.step === 'info' ? (
           <PersonalInfoSheet
             copy={copy}
             info={personalReading.info}
+            isCalculating={personalReading.isCalculating}
             onClose={state.closePersonalReadingSheet}
-            onContinue={state.closePersonalReadingSheet}
+            onContinue={state.continuePersonalInfo}
             onInfoChange={state.setPersonalInfoField}
           />
         ) : (

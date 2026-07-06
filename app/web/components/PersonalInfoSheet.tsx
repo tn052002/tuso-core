@@ -1,6 +1,6 @@
 import type { WebCopy } from '../i18n/locales';
 import type { PersonalInfo } from '../store/useTusoStore';
-import { PersonalStepProgress } from './PersonalStepProgress';
+import { PersonalSheetFrame } from './PersonalSheetFrame';
 
 const birthHourBranches = [
   { label: 'Giờ Tý (23:00 – 00:59)', start: 23, end: 0 },
@@ -32,6 +32,7 @@ function getBirthHourBranch(time: string) {
 type PersonalInfoSheetProps = {
   copy: WebCopy;
   info: PersonalInfo;
+  isCalculating: boolean;
   onClose: () => void;
   onContinue: () => void;
   onInfoChange: (field: keyof PersonalInfo, value: string) => void;
@@ -40,6 +41,7 @@ type PersonalInfoSheetProps = {
 export function PersonalInfoSheet({
   copy,
   info,
+  isCalculating,
   onClose,
   onContinue,
   onInfoChange,
@@ -50,123 +52,131 @@ export function PersonalInfoSheet({
   }
 
   return (
-    <div className="personal-reading-sheet">
-      <button
-        className="question-sheet-close personal-reading-close"
-        type="button"
-        onClick={onClose}
-        aria-label={copy.closeSheet}
-      >
-        ×
-      </button>
-
-      <div className="personal-reading-content">
-        <div className="personal-reading-header">
-          <PersonalStepProgress copy={copy} />
-          <div className="personal-reading-message">
-            <h2>{copy.personalInfoLead}</h2>
-            <p>{copy.personalInfoSublead}</p>
-            <small>{copy.personalInfoPrivacy}</small>
-          </div>
-        </div>
-
-        <div className="personal-info-form">
-          <div className="personal-info-list">
-            <label className="personal-info-row">
-              <span className="personal-info-icon name" aria-hidden="true" />
-              <span>
-                <small>{copy.personalInfoName}</small>
-                <input
-                  aria-label={copy.personalInfoName}
-                  placeholder={copy.personalInfoNamePlaceholder}
-                  type="text"
-                  value={info.name}
-                  onChange={(event) => onInfoChange('name', event.target.value)}
-                />
-              </span>
-            </label>
-            <label className="personal-info-row">
-              <span className="personal-info-icon calendar" aria-hidden="true" />
-              <span>
-                <small>{copy.personalInfoDateOfBirth}</small>
-                <input
-                  aria-label={copy.personalInfoDateOfBirth}
-                  type="date"
-                  value={info.birthDate}
-                  onChange={(event) => onInfoChange('birthDate', event.target.value)}
-                />
-              </span>
-            </label>
-            <label className="personal-info-row with-branch">
-              <span className="personal-info-icon clock" aria-hidden="true" />
-              <span>
-                <small>{copy.personalInfoTimeOfBirth}</small>
-                <input
-                  aria-label={copy.personalInfoTimeOfBirth}
-                  type="time"
-                  value={info.birthTime}
-                  onChange={(event) => handleBirthTimeChange(event.target.value)}
-                />
-              </span>
-              <select
-                aria-label={copy.personalInfoTimeBranchLabel}
-                value={info.birthTimeBranch}
-                onChange={(event) => onInfoChange('birthTimeBranch', event.target.value)}
-              >
-                <option value="">{copy.personalInfoTimeBranchLabel}</option>
-                {birthHourBranches.map((branch) => (
-                  <option key={branch.label} value={branch.label}>
-                    {branch.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="personal-info-row">
-              <span className="personal-info-icon place" aria-hidden="true" />
-              <span>
-                <small>{copy.personalInfoPlaceOfBirth}</small>
-                <input
-                  aria-label={copy.personalInfoPlaceOfBirth}
-                  placeholder={copy.personalInfoPlacePlaceholder}
-                  type="text"
-                  value={info.birthPlace}
-                  onChange={(event) => onInfoChange('birthPlace', event.target.value)}
-                />
-              </span>
-            </label>
-            <label className="personal-info-row">
-              <span className="personal-info-icon gender" aria-hidden="true" />
-              <span>
-                <small>{copy.personalInfoGender}</small>
-                <select
-                  aria-label={copy.personalInfoGender}
-                  value={info.gender}
-                  onChange={(event) => onInfoChange('gender', event.target.value)}
-                >
-                  <option value="">{copy.personalInfoGenderPlaceholder}</option>
-                  <option value="male">{copy.personalInfoGenderMale}</option>
-                  <option value="female">{copy.personalInfoGenderFemale}</option>
-                  <option value="other">{copy.personalInfoGenderOther}</option>
-                </select>
-              </span>
-            </label>
-          </div>
-
-          <div className="personal-info-tip">
-            <span className="personal-info-icon star" aria-hidden="true" />
-            <p>
-              <strong>{copy.personalInfoTip}</strong>
-              <small>{copy.personalInfoTipDetail}</small>
-            </p>
-          </div>
-        </div>
-
-        <button className="personal-reading-continue" type="button" onClick={onContinue}>
-          <span>{copy.personalReadingContinue}</span>
-          <i aria-hidden="true">→</i>
-        </button>
-        <p className="personal-reading-note">{copy.personalInfoEditNote}</p>
+    <PersonalSheetFrame copy={copy} onClose={onClose}>
+      <div className="personal-reading-message">
+        <h2>{copy.personalInfoLead}</h2>
+        <p>{copy.personalInfoSublead}</p>
+        <small>{copy.personalInfoPrivacy}</small>
       </div>
-    </div>
+
+      <div className="personal-info-form">
+        <div className="personal-info-list">
+          <label className="personal-info-row">
+            <span className="personal-info-icon name" aria-hidden="true" />
+            <span>
+              <small>{copy.personalInfoName}</small>
+              <input
+                aria-label={copy.personalInfoName}
+                placeholder={copy.personalInfoNamePlaceholder}
+                type="text"
+                value={info.name}
+                onChange={(event) => onInfoChange('name', event.target.value)}
+              />
+            </span>
+          </label>
+          <label className="personal-info-row">
+            <span className="personal-info-icon calendar" aria-hidden="true" />
+            <span>
+              <small>{copy.personalInfoDateOfBirth}</small>
+              <input
+                aria-label={copy.personalInfoDateOfBirth}
+                type="date"
+                value={info.birthDate}
+                onChange={(event) => onInfoChange('birthDate', event.target.value)}
+              />
+            </span>
+          </label>
+          <label className="personal-info-row with-branch">
+            <span className="personal-info-icon clock" aria-hidden="true" />
+            <span>
+              <small>{copy.personalInfoTimeOfBirth}</small>
+              <input
+                aria-label={copy.personalInfoTimeOfBirth}
+                type="time"
+                value={info.birthTime}
+                onChange={(event) => handleBirthTimeChange(event.target.value)}
+              />
+            </span>
+            <select
+              aria-label={copy.personalInfoTimeBranchLabel}
+              value={info.birthTimeBranch}
+              onChange={(event) => onInfoChange('birthTimeBranch', event.target.value)}
+            >
+              <option value="">{copy.personalInfoTimeBranchLabel}</option>
+              {birthHourBranches.map((branch) => (
+                <option key={branch.label} value={branch.label}>
+                  {branch.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="personal-info-row">
+            <span className="personal-info-icon place" aria-hidden="true" />
+            <span>
+              <small>{copy.personalInfoPlaceOfBirth}</small>
+              <input
+                aria-label={copy.personalInfoPlaceOfBirth}
+                placeholder={copy.personalInfoPlacePlaceholder}
+                type="text"
+                value={info.birthPlace}
+                onChange={(event) => onInfoChange('birthPlace', event.target.value)}
+              />
+            </span>
+          </label>
+          <label className="personal-info-row">
+            <span className="personal-info-icon gender" aria-hidden="true" />
+            <span>
+              <small>{copy.personalInfoGender}</small>
+              <select
+                aria-label={copy.personalInfoGender}
+                value={info.gender}
+                onChange={(event) => onInfoChange('gender', event.target.value)}
+              >
+                <option value="">{copy.personalInfoGenderPlaceholder}</option>
+                <option value="male">{copy.personalInfoGenderMale}</option>
+                <option value="female">{copy.personalInfoGenderFemale}</option>
+                <option value="other">{copy.personalInfoGenderOther}</option>
+              </select>
+            </span>
+          </label>
+        </div>
+
+        <div className="personal-info-tip">
+          <span className="personal-info-icon star" aria-hidden="true" />
+          <p>
+            <strong>{copy.personalInfoTip}</strong>
+            <small>{copy.personalInfoTipDetail}</small>
+          </p>
+        </div>
+      </div>
+
+      <button
+        className="personal-reading-continue"
+        type="button"
+        onClick={onContinue}
+        disabled={isCalculating}
+      >
+        <span>{copy.personalReadingContinue}</span>
+        <i aria-hidden="true">→</i>
+      </button>
+      <p className="personal-reading-note">{copy.personalInfoEditNote}</p>
+
+      {isCalculating ? (
+        <div className="personal-calculation-overlay" role="status" aria-live="polite">
+          <div className="personal-calculation-panel">
+            <span className="personal-calculation-ring" aria-hidden="true">
+              <span />
+            </span>
+            <strong>{copy.personalCalculationTitle}</strong>
+            <p>{copy.personalCalculationDetail}</p>
+            <div className="personal-calculation-bars" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </PersonalSheetFrame>
   );
 }

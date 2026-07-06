@@ -48,6 +48,22 @@ export type WebCopy = {
   personalInfoTip: string;
   personalInfoTipDetail: string;
   personalInfoEditNote: string;
+  personalCalculationTitle: string;
+  personalCalculationDetail: string;
+  personalActionLead: string;
+  personalActionSublead: string;
+  personalActionPrompt: string;
+  personalActionPromptHelp: string;
+  personalActionKnowTitle: string;
+  personalActionKnowKicker: string;
+  personalActionKnowDescription: string;
+  personalActionMeaningTitle: string;
+  personalActionMeaningKicker: string;
+  personalActionMeaningDescription: string;
+  personalActionSaveTitle: string;
+  personalActionSaveKicker: string;
+  personalActionSaveDescription: string;
+  personalActionPrivacy: string;
   personalBlueprintPackage: string;
   personalBlueprintPrice: string;
   personalBlueprintDescription: string;
@@ -113,6 +129,22 @@ export const webCopy: Record<WebLocale, WebCopy> = {
     personalInfoTip: 'Accurate birth time is important for a precise reading.',
     personalInfoTipDetail: 'If you’re unsure, choose the closest time.',
     personalInfoEditNote: 'You can edit this anytime in Settings.',
+    personalCalculationTitle: 'Reading your compass',
+    personalCalculationDetail: 'Connecting your question with your nature and current season.',
+    personalActionLead: 'Your compass is ready.',
+    personalActionSublead: 'We’ve connected your question with your nature and current season.',
+    personalActionPrompt: 'Where would you like to begin?',
+    personalActionPromptHelp: 'You can explore any of these anytime.',
+    personalActionKnowTitle: 'Know Yourself',
+    personalActionKnowKicker: 'Your personal blueprint',
+    personalActionKnowDescription: 'Discover how you’re naturally designed to move through life.',
+    personalActionMeaningTitle: 'Understand This Question',
+    personalActionMeaningKicker: 'Your personal reading',
+    personalActionMeaningDescription: 'See what this question means for you, right now.',
+    personalActionSaveTitle: 'Save My Compass',
+    personalActionSaveKicker: 'Create a free account',
+    personalActionSaveDescription: 'Keep your compass, readings and future guidance in one place.',
+    personalActionPrivacy: 'Your data is private and never shared.',
     personalBlueprintPackage: 'Personal Blueprint',
     personalBlueprintPrice: 'Free',
     personalBlueprintDescription: 'Keep the cast as your personal pattern entry.',
@@ -181,6 +213,22 @@ export const webCopy: Record<WebLocale, WebCopy> = {
     personalInfoTip: 'Giờ sinh chính xác giúp bản đọc rõ hơn.',
     personalInfoTipDetail: 'Nếu bạn không chắc, hãy chọn mốc gần nhất.',
     personalInfoEditNote: 'Bạn có thể chỉnh sửa bất cứ lúc nào trong Cài đặt.',
+    personalCalculationTitle: 'Đang đọc la bàn của bạn',
+    personalCalculationDetail: 'Kết nối câu hỏi với bản tính và mùa hiện tại của bạn.',
+    personalActionLead: 'La bàn của bạn đã sẵn sàng.',
+    personalActionSublead: 'Chúng tôi đã kết nối câu hỏi với bản tính và mùa hiện tại của bạn.',
+    personalActionPrompt: 'Bạn muốn bắt đầu từ đâu?',
+    personalActionPromptHelp: 'Bạn có thể khám phá các phần này bất cứ lúc nào.',
+    personalActionKnowTitle: 'Hiểu Chính Mình',
+    personalActionKnowKicker: 'Bản thiết kế cá nhân của bạn',
+    personalActionKnowDescription: 'Khám phá cách bạn được thiết kế tự nhiên để đi qua cuộc sống.',
+    personalActionMeaningTitle: 'Hiểu Câu Hỏi Này',
+    personalActionMeaningKicker: 'Bản đọc cá nhân của bạn',
+    personalActionMeaningDescription: 'Xem câu hỏi này có ý nghĩa gì với bạn ngay lúc này.',
+    personalActionSaveTitle: 'Lưu La Bàn Của Tôi',
+    personalActionSaveKicker: 'Tạo tài khoản miễn phí',
+    personalActionSaveDescription: 'Lưu la bàn, các bản đọc và hướng dẫn tương lai ở một nơi.',
+    personalActionPrivacy: 'Dữ liệu của bạn riêng tư và không bao giờ được chia sẻ.',
     personalBlueprintPackage: 'Personal Blueprint',
     personalBlueprintPrice: 'Miễn phí',
     personalBlueprintDescription: 'Lưu quẻ gieo như một mốc khuôn mẫu cá nhân.',
