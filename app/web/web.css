@@ -272,11 +272,11 @@
     border-top: 0;
     border-left: 1px solid rgba(212, 178, 106, 0.22);
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: auto auto;
     align-items: start;
-    justify-content: stretch;
-    justify-items: stretch;
-    gap: 6px;
+    justify-content: center;
+    justify-items: center;
+    gap: 8px;
   }
 
   .cast-summary-time {
@@ -878,6 +878,42 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (min-width: 901px) {
+  .cast-summary-sheet {
+    padding: 18px 12px;
+    border-top: 0;
+    border-left: 1px solid rgba(212, 178, 106, 0.22);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    justify-content: stretch;
+    justify-items: stretch;
+    gap: 6px;
+  }
+
+  .cast-summary-time {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: start;
+    max-width: none;
+    max-height: calc(100svh - 36px);
+    line-height: 1.35;
+    text-orientation: mixed;
+    writing-mode: vertical-rl;
+  }
+
+  .cast-summary-question {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: end;
+    max-width: none;
+    max-height: calc(100svh - 36px);
+    font-size: clamp(1.25rem, 2vw, 1.55rem);
+    text-orientation: mixed;
+    writing-mode: vertical-rl;
+  }
 }
 
 .cast-summary-card {
