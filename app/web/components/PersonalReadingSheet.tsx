@@ -1,4 +1,5 @@
 import type { WebCopy } from '../i18n/locales';
+import { PersonalStepProgress } from './PersonalStepProgress';
 
 type PersonalReadingSheetProps = {
   blueprintSelected: boolean;
@@ -32,20 +33,7 @@ export function PersonalReadingSheet({
 
       <div className="personal-reading-content">
         <div className="personal-reading-header">
-          <div className="personal-reading-steps" aria-label={copy.personalReadingTitle}>
-            <span className="is-complete">
-              <strong>{copy.personalReadingStepForm}</strong>
-              <small>{copy.personalReadingStepFormHelp}</small>
-            </span>
-            <span className="is-complete">
-              <strong>{copy.personalReadingStepLaw}</strong>
-              <small>{copy.personalReadingStepLawHelp}</small>
-            </span>
-            <span className="is-current">
-              <strong>{copy.personalReadingStepAction}</strong>
-              <small>{copy.personalReadingStepActionHelp}</small>
-            </span>
-          </div>
+          <PersonalStepProgress copy={copy} />
           <div className="personal-reading-message">
             <h2>{copy.personalReadingLead}</h2>
             <p>{copy.personalReadingSublead}</p>
@@ -90,8 +78,6 @@ export function PersonalReadingSheet({
 
         <button className="personal-reading-continue" type="button" onClick={onContinue}>
           <span>{copy.personalReadingContinue}</span>
-          <span aria-hidden="true">—</span>
-          <strong>{copy.personalReadingIncluded}</strong>
           <i aria-hidden="true">→</i>
         </button>
         <p className="personal-reading-note">{copy.personalReadingUpgradeNote}</p>

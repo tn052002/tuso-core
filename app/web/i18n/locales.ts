@@ -30,6 +30,24 @@ export type WebCopy = {
   personalReadingStepActionHelp: string;
   personalReadingLead: string;
   personalReadingSublead: string;
+  personalInfoLead: string;
+  personalInfoSublead: string;
+  personalInfoPrivacy: string;
+  personalInfoName: string;
+  personalInfoNamePlaceholder: string;
+  personalInfoDateOfBirth: string;
+  personalInfoTimeOfBirth: string;
+  personalInfoTimeBranchLabel: string;
+  personalInfoPlaceOfBirth: string;
+  personalInfoPlacePlaceholder: string;
+  personalInfoGender: string;
+  personalInfoGenderPlaceholder: string;
+  personalInfoGenderMale: string;
+  personalInfoGenderFemale: string;
+  personalInfoGenderOther: string;
+  personalInfoTip: string;
+  personalInfoTipDetail: string;
+  personalInfoEditNote: string;
   personalBlueprintPackage: string;
   personalBlueprintPrice: string;
   personalBlueprintDescription: string;
@@ -76,6 +94,25 @@ export const webCopy: Record<WebLocale, WebCopy> = {
     personalReadingStepActionHelp: 'Action current',
     personalReadingLead: 'The oracle has spoken.',
     personalReadingSublead: 'Now make it yours.',
+    personalInfoLead: "Let's build your personal compass",
+    personalInfoSublead:
+      'Your birth details are used to create your BaZi and Zi Wei chart — the foundation of your personal reading.',
+    personalInfoPrivacy: 'Your data is private and never shared.',
+    personalInfoName: 'Name',
+    personalInfoNamePlaceholder: 'Your name',
+    personalInfoDateOfBirth: 'Date of birth',
+    personalInfoTimeOfBirth: 'Time of birth',
+    personalInfoTimeBranchLabel: 'Birth hour branch',
+    personalInfoPlaceOfBirth: 'Place of birth',
+    personalInfoPlacePlaceholder: 'City, country',
+    personalInfoGender: 'Gender',
+    personalInfoGenderPlaceholder: 'Select gender',
+    personalInfoGenderMale: 'Male',
+    personalInfoGenderFemale: 'Female',
+    personalInfoGenderOther: 'Other',
+    personalInfoTip: 'Accurate birth time is important for a precise reading.',
+    personalInfoTipDetail: 'If you’re unsure, choose the closest time.',
+    personalInfoEditNote: 'You can edit this anytime in Settings.',
     personalBlueprintPackage: 'Personal Blueprint',
     personalBlueprintPrice: 'Free',
     personalBlueprintDescription: 'Keep the cast as your personal pattern entry.',
@@ -125,6 +162,25 @@ export const webCopy: Record<WebLocale, WebCopy> = {
     personalReadingStepActionHelp: 'Nhân là bước hiện tại',
     personalReadingLead: 'Oracle đã lên tiếng.',
     personalReadingSublead: 'Giờ hãy biến nó thành của bạn.',
+    personalInfoLead: 'Hãy dựng la bàn cá nhân của bạn',
+    personalInfoSublead:
+      'Thông tin sinh được dùng để lập lá số Bát Tự và Tử Vi — nền tảng cho bản đọc cá nhân.',
+    personalInfoPrivacy: 'Dữ liệu của bạn riêng tư và không bao giờ được chia sẻ.',
+    personalInfoName: 'Tên',
+    personalInfoNamePlaceholder: 'Tên của bạn',
+    personalInfoDateOfBirth: 'Ngày sinh',
+    personalInfoTimeOfBirth: 'Giờ sinh',
+    personalInfoTimeBranchLabel: 'Canh giờ sinh',
+    personalInfoPlaceOfBirth: 'Nơi sinh',
+    personalInfoPlacePlaceholder: 'Thành phố, quốc gia',
+    personalInfoGender: 'Giới tính',
+    personalInfoGenderPlaceholder: 'Chọn giới tính',
+    personalInfoGenderMale: 'Nam',
+    personalInfoGenderFemale: 'Nữ',
+    personalInfoGenderOther: 'Khác',
+    personalInfoTip: 'Giờ sinh chính xác giúp bản đọc rõ hơn.',
+    personalInfoTipDetail: 'Nếu bạn không chắc, hãy chọn mốc gần nhất.',
+    personalInfoEditNote: 'Bạn có thể chỉnh sửa bất cứ lúc nào trong Cài đặt.',
     personalBlueprintPackage: 'Personal Blueprint',
     personalBlueprintPrice: 'Miễn phí',
     personalBlueprintDescription: 'Lưu quẻ gieo như một mốc khuôn mẫu cá nhân.',

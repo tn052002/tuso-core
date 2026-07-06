@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { CastResultSummary } from './components/CastResultSummary';
 import { CastingSheet } from './components/CastingSheet';
 import { Compass } from './components/Compass';
+import { PersonalInfoSheet } from './components/PersonalInfoSheet';
 import { PersonalReadingSheet } from './components/PersonalReadingSheet';
 import { QuestionForm } from './components/QuestionForm';
 import { TopBar } from './components/TopBar';
@@ -117,15 +118,25 @@ export function WebOracle() {
         </>
       }
       topSheet={
-        <PersonalReadingSheet
-          blueprintSelected={personalReading.blueprintSelected}
-          copy={copy}
-          meaningSelected={personalReading.meaningSelected}
-          onBlueprintChange={state.setPersonalBlueprintSelected}
-          onClose={state.closePersonalReadingSheet}
-          onContinue={state.closePersonalReadingSheet}
-          onMeaningChange={state.setPersonalMeaningSelected}
-        />
+        personalReading.step === 'info' ? (
+          <PersonalInfoSheet
+            copy={copy}
+            info={personalReading.info}
+            onClose={state.closePersonalReadingSheet}
+            onContinue={state.closePersonalReadingSheet}
+            onInfoChange={state.setPersonalInfoField}
+          />
+        ) : (
+          <PersonalReadingSheet
+            blueprintSelected={personalReading.blueprintSelected}
+            copy={copy}
+            meaningSelected={personalReading.meaningSelected}
+            onBlueprintChange={state.setPersonalBlueprintSelected}
+            onClose={state.closePersonalReadingSheet}
+            onContinue={state.continuePersonalReading}
+            onMeaningChange={state.setPersonalMeaningSelected}
+          />
+        )
       }
     />
   );
