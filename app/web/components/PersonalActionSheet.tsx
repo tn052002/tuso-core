@@ -53,7 +53,7 @@ export function PersonalActionSheet({ copy, onClose }: PersonalActionSheetProps)
             <i aria-hidden="true">→</i>
           </button>
 
-          <button className="personal-action-card is-save" type="button">
+          <button className="personal-action-card is-save" type="button" disabled>
             <span className="personal-action-orb lock" aria-hidden="true" />
             <span className="personal-action-card-copy">
               <strong>{copy.personalActionSaveTitle}</strong>

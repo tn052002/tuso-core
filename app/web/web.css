@@ -1497,6 +1497,18 @@
   transform: translateY(-1px);
 }
 
+.personal-action-card:disabled {
+  cursor: default;
+  opacity: 0.48;
+  transform: none;
+}
+
+.personal-action-card:disabled:hover {
+  border-color: rgba(79, 109, 138, 0.42);
+  background: rgba(23, 76, 112, 0.1);
+  box-shadow: none;
+}
+
 .personal-action-card.is-blueprint {
   border-color: rgba(81, 157, 123, 0.34);
   background: rgba(25, 109, 87, 0.08);

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { CastResultSummary } from './components/CastResultSummary';
 import { CastingSheet } from './components/CastingSheet';
 import { Compass } from './components/Compass';
@@ -16,7 +17,13 @@ import { saveCasting } from './store/persistence';
 import { getCastingView } from './store/selectors';
 import { useTusoStore } from './store/useTusoStore';
 
-export function WebOracle() {
+type WebOracleProps = {
+  anonymousSessionId?: string;
+};
+
+export function WebOracle({ anonymousSessionId }: WebOracleProps) {
+  const pathname = usePathname();
+  const router = useRouter();
   const state = useTusoStore();
   const { casting, locale, personalReading, shell, today } = state;
   const copy = webCopy[locale];
@@ -27,10 +34,18 @@ export function WebOracle() {
 
   useEffect(() => {
     state.setToday(new Date());
-    state.hydrateFromStorage();
+    state.hydrateFromStorage(anonymousSessionId);
 
     return state.clearCastingTimers;
-  }, []);
+  }, [anonymousSessionId]);
+
+  useEffect(() => {
+    const sessionId = personalReading.anonymousSessionId;
+
+    if (!sessionId || pathname === `/web/${sessionId}`) return;
+
+    router.push(`/web/${sessionId}`);
+  }, [pathname, personalReading.anonymousSessionId, router]);
 
   useEffect(() => {
     if (!casting.hasHydrated) return;

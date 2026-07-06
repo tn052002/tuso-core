@@ -2,7 +2,14 @@ import { create } from 'zustand';
 import type { AppShellState, SheetMode, SheetPosition } from '../shell/sheetTypes';
 import { getNextLocale, type WebLocale } from '../i18n/locales';
 import { castLine, type CastLine } from '../lib/iching';
-import { loadCasting, loadLocale, saveLocale } from './persistence';
+import {
+  createAnonymousSessionId,
+  loadAnonymousSession,
+  loadCasting,
+  loadLocale,
+  saveAnonymousSession,
+  saveLocale,
+} from './persistence';
 
 type CastingState = {
   asked: boolean;
@@ -31,6 +38,7 @@ export type PersonalInfo = {
 };
 
 type PersonalReadingState = {
+  anonymousSessionId: string | null;
   blueprintSelected: boolean;
   info: PersonalInfo;
   isCalculating: boolean;
@@ -44,7 +52,7 @@ type TusoStoreActions = {
   closePersonalReadingSheet: () => void;
   handleCast: () => void;
   handleQuickCast: () => void;
-  hydrateFromStorage: () => void;
+  hydrateFromStorage: (anonymousSessionId?: string) => void;
   openCastingSheet: () => void;
   openPersonalReadingSheet: () => void;
   continuePersonalReading: () => void;
@@ -109,6 +117,7 @@ const initialCasting: CastingState = {
 };
 
 const initialPersonalReading: PersonalReadingState = {
+  anonymousSessionId: null,
   blueprintSelected: true,
   info: {
     name: '',
@@ -247,6 +256,8 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
     }));
 
     personalCalculationTimer = window.setTimeout(() => {
+      const sessionId = createAnonymousSessionId();
+
       set((state) => ({
         shell: {
           ...state.shell,
@@ -256,9 +267,32 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
         },
         personalReading: {
           ...state.personalReading,
+          anonymousSessionId: sessionId,
           isCalculating: false,
         },
       }));
+
+      const { casting, locale, personalReading } = get();
+
+      saveAnonymousSession({
+        id: sessionId,
+        createdAt: new Date().toISOString(),
+        locale,
+        casting: {
+          asked: casting.asked,
+          question: casting.question,
+          castTime: casting.castTime?.toISOString() ?? null,
+          lines: casting.lines,
+          isRevealed: casting.isRevealed,
+        },
+        personalReading: {
+          blueprintSelected: personalReading.blueprintSelected,
+          info: personalReading.info,
+          meaningSelected: personalReading.meaningSelected,
+          step: 'action',
+        },
+      });
+
       personalCalculationTimer = null;
 
       personalActionTimer = window.setTimeout(() => {
@@ -467,9 +501,48 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
     runQuickCastStep();
   },
 
-  hydrateFromStorage() {
+  hydrateFromStorage(anonymousSessionId) {
     const savedLocale = loadLocale();
+    const savedAnonymousSession = anonymousSessionId
+      ? loadAnonymousSession(anonymousSessionId)
+      : null;
     const savedCasting = loadCasting();
+
+    if (savedAnonymousSession) {
+      set((state) => ({
+        locale: savedAnonymousSession.locale,
+        shell: {
+          ...state.shell,
+          topSheet: 'full',
+          bottomSheet: 'collapsed',
+          activeContext: 'personal',
+        },
+        casting: {
+          ...state.casting,
+          asked: savedAnonymousSession.casting.asked,
+          question: savedAnonymousSession.casting.question,
+          castTime: savedAnonymousSession.casting.castTime
+            ? new Date(savedAnonymousSession.casting.castTime)
+            : null,
+          lines: savedAnonymousSession.casting.lines,
+          isRevealed: Boolean(
+            savedAnonymousSession.casting.isRevealed ||
+              savedAnonymousSession.casting.lines.length === 6,
+          ),
+          hasHydrated: true,
+        },
+        personalReading: {
+          ...state.personalReading,
+          anonymousSessionId: savedAnonymousSession.id,
+          blueprintSelected: savedAnonymousSession.personalReading.blueprintSelected,
+          info: savedAnonymousSession.personalReading.info,
+          isCalculating: false,
+          meaningSelected: savedAnonymousSession.personalReading.meaningSelected,
+          step: savedAnonymousSession.personalReading.step,
+        },
+      }));
+      return;
+    }
 
     set((state) => ({
       locale: savedLocale ?? state.locale,
@@ -541,6 +614,7 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
         ...state.personalReading,
         blueprintSelected: true,
         meaningSelected: true,
+        anonymousSessionId: null,
         isCalculating: false,
         step: 'selection',
       },
