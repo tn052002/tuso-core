@@ -32,7 +32,6 @@ export function PersonalReadingSheet({
 
       <div className="personal-reading-content">
         <div className="personal-reading-header">
-          <p>{copy.personalReadingTitle}</p>
           <div className="personal-reading-steps" aria-label={copy.personalReadingTitle}>
             <span className="is-complete">
               <strong>{copy.personalReadingStepForm}</strong>
@@ -47,36 +46,42 @@ export function PersonalReadingSheet({
               <small>{copy.personalReadingStepActionHelp}</small>
             </span>
           </div>
+          <div className="personal-reading-message">
+            <h2>{copy.personalReadingLead}</h2>
+            <p>{copy.personalReadingSublead}</p>
+          </div>
         </div>
 
         <div className="personal-package-list">
-          <label className="personal-package-option">
+          <label className="personal-package-option is-included">
             <input
               checked={blueprintSelected}
               onChange={(event) => onBlueprintChange(event.target.checked)}
               type="checkbox"
             />
             <span className="personal-package-check" aria-hidden="true" />
+            <span className="personal-package-icon blueprint" aria-hidden="true" />
             <span className="personal-package-copy">
               <span>
                 <strong>{copy.personalBlueprintPackage}</strong>
-                <em>{copy.personalBlueprintPrice}</em>
+                <b>{copy.personalReadingIncluded}</b>
               </span>
               <small>{copy.personalBlueprintDescription}</small>
             </span>
           </label>
 
-          <label className="personal-package-option">
+          <label className="personal-package-option is-premium">
             <input
               checked={meaningSelected}
               onChange={(event) => onMeaningChange(event.target.checked)}
               type="checkbox"
             />
             <span className="personal-package-check" aria-hidden="true" />
+            <span className="personal-package-icon meaning" aria-hidden="true" />
             <span className="personal-package-copy">
               <span>
                 <strong>{copy.personalMeaningPackage}</strong>
-                <em>{copy.personalMeaningPrice}</em>
+                <b>{copy.personalMeaningPrice}</b>
               </span>
               <small>{copy.personalMeaningDescription}</small>
             </span>
@@ -84,8 +89,12 @@ export function PersonalReadingSheet({
         </div>
 
         <button className="personal-reading-continue" type="button" onClick={onContinue}>
-          {copy.personalReadingContinue}
+          <span>{copy.personalReadingContinue}</span>
+          <span aria-hidden="true">—</span>
+          <strong>{copy.personalReadingIncluded}</strong>
+          <i aria-hidden="true">→</i>
         </button>
+        <p className="personal-reading-note">{copy.personalReadingUpgradeNote}</p>
       </div>
     </div>
   );

@@ -28,6 +28,8 @@ export type WebCopy = {
   personalReadingStepFormHelp: string;
   personalReadingStepLawHelp: string;
   personalReadingStepActionHelp: string;
+  personalReadingLead: string;
+  personalReadingSublead: string;
   personalBlueprintPackage: string;
   personalBlueprintPrice: string;
   personalBlueprintDescription: string;
@@ -35,6 +37,8 @@ export type WebCopy = {
   personalMeaningPrice: string;
   personalMeaningDescription: string;
   personalReadingContinue: string;
+  personalReadingIncluded: string;
+  personalReadingUpgradeNote: string;
   ready: string;
   forming: string;
   noMoving: string;
@@ -70,6 +74,8 @@ export const webCopy: Record<WebLocale, WebCopy> = {
     personalReadingStepFormHelp: 'Form complete',
     personalReadingStepLawHelp: 'Law complete',
     personalReadingStepActionHelp: 'Action current',
+    personalReadingLead: 'The oracle has spoken.',
+    personalReadingSublead: 'Now make it yours.',
     personalBlueprintPackage: 'Personal Blueprint',
     personalBlueprintPrice: 'Free',
     personalBlueprintDescription: 'Keep the cast as your personal pattern entry.',
@@ -77,6 +83,8 @@ export const webCopy: Record<WebLocale, WebCopy> = {
     personalMeaningPrice: '10k VND',
     personalMeaningDescription: 'Translate this result into guidance for your current question.',
     personalReadingContinue: 'Continue',
+    personalReadingIncluded: 'Included',
+    personalReadingUpgradeNote: 'You can upgrade to the full reading anytime.',
     ready: 'Ready',
     forming: 'Forming...',
     noMoving: 'No Moving',
@@ -115,6 +123,8 @@ export const webCopy: Record<WebLocale, WebCopy> = {
     personalReadingStepFormHelp: 'Hình tượng đã hoàn thành',
     personalReadingStepLawHelp: 'Lý đã hoàn thành',
     personalReadingStepActionHelp: 'Nhân là bước hiện tại',
+    personalReadingLead: 'Oracle đã lên tiếng.',
+    personalReadingSublead: 'Giờ hãy biến nó thành của bạn.',
     personalBlueprintPackage: 'Personal Blueprint',
     personalBlueprintPrice: 'Miễn phí',
     personalBlueprintDescription: 'Lưu quẻ gieo như một mốc khuôn mẫu cá nhân.',
@@ -122,6 +132,8 @@ export const webCopy: Record<WebLocale, WebCopy> = {
     personalMeaningPrice: '10k VND',
     personalMeaningDescription: 'Diễn giải kết quả này thành hướng đi cho câu hỏi hiện tại.',
     personalReadingContinue: 'Tiếp tục',
+    personalReadingIncluded: 'Đã bao gồm',
+    personalReadingUpgradeNote: 'Bạn có thể nâng cấp lên bản đọc đầy đủ bất cứ lúc nào.',
     ready: 'Sẵn sàng',
     forming: 'Đang kết thành...',
     noMoving: 'Không có hào động',
