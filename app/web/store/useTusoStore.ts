@@ -10,6 +10,7 @@ type CastingState = {
   castTime: Date | null;
   lines: CastLine[];
   isCasting: boolean;
+  isQuickCasting: boolean;
   isRevealing: boolean;
   isRevealed: boolean;
   isReleasing: boolean;
@@ -30,6 +31,7 @@ type TusoStoreActions = {
   closeCastingSheet: () => void;
   closePersonalReadingSheet: () => void;
   handleCast: () => void;
+  handleQuickCast: () => void;
   hydrateFromStorage: () => void;
   openCastingSheet: () => void;
   openPersonalReadingSheet: () => void;
@@ -57,6 +59,7 @@ let castTimer: number | null = null;
 let revealTimer: number | null = null;
 let releaseTimer: number | null = null;
 let autoFlipTimer: number | null = null;
+let quickCastTimer: number | null = null;
 
 function clearTimer(timer: number | null) {
   if (timer) {
@@ -76,6 +79,7 @@ const initialCasting: CastingState = {
   castTime: null,
   lines: [],
   isCasting: false,
+  isQuickCasting: false,
   isRevealing: false,
   isRevealed: false,
   isReleasing: false,
@@ -103,10 +107,12 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
     clearTimer(revealTimer);
     clearTimer(releaseTimer);
     clearTimer(autoFlipTimer);
+    clearTimer(quickCastTimer);
     castTimer = null;
     revealTimer = null;
     releaseTimer = null;
     autoFlipTimer = null;
+    quickCastTimer = null;
   },
 
   closeCastingSheet() {
@@ -122,6 +128,7 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
         ...state.casting,
         asked: false,
         isCasting: false,
+        isQuickCasting: false,
         isRevealing: false,
         isReleasing: false,
         flippedHex: {
@@ -137,6 +144,7 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
       shell: {
         ...state.shell,
         topSheet: 'hidden',
+        bottomSheet: state.casting.isRevealed ? 'half' : state.shell.bottomSheet,
         activeContext: state.casting.isRevealed ? 'result' : state.shell.activeContext,
       },
     }));
@@ -145,7 +153,14 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
   handleCast() {
     const { casting } = get();
 
-    if (casting.isCasting || casting.isRevealing || casting.lines.length >= 6) return;
+    if (
+      casting.isCasting ||
+      casting.isQuickCasting ||
+      casting.isRevealing ||
+      casting.lines.length >= 6
+    ) {
+      return;
+    }
 
     set((state) => ({
       casting: {
@@ -212,6 +227,117 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
     }, 1500);
   },
 
+  handleQuickCast() {
+    const { casting } = get();
+
+    if (
+      casting.isCasting ||
+      casting.isQuickCasting ||
+      casting.isRevealing ||
+      casting.lines.length >= 6
+    ) {
+      return;
+    }
+
+    set((state) => ({
+      casting: {
+        ...state.casting,
+        isQuickCasting: true,
+      },
+    }));
+
+    const runQuickCastStep = () => {
+      const currentCasting = get().casting;
+
+      if (
+        !currentCasting.isQuickCasting ||
+        currentCasting.isRevealing ||
+        currentCasting.lines.length >= 6
+      ) {
+        set((state) => ({
+          casting: {
+            ...state.casting,
+            isCasting: false,
+            isQuickCasting: false,
+          },
+        }));
+        quickCastTimer = null;
+        return;
+      }
+
+      set((state) => ({
+        casting: {
+          ...state.casting,
+          isCasting: true,
+        },
+      }));
+
+      quickCastTimer = window.setTimeout(() => {
+        const currentLines = get().casting.lines;
+        const nextLines = currentLines.length >= 6 ? currentLines : [...currentLines, castLine()];
+        const shouldReveal = nextLines.length === 6;
+
+        set((state) => ({
+          casting: {
+            ...state.casting,
+            lines: nextLines,
+            isCasting: false,
+            isQuickCasting: !shouldReveal,
+            isRevealing: shouldReveal && !state.casting.isRevealed,
+          },
+          shell: {
+            ...state.shell,
+            activeContext: shouldReveal ? 'result' : 'casting',
+          },
+        }));
+        quickCastTimer = null;
+
+        if (!shouldReveal) {
+          quickCastTimer = window.setTimeout(runQuickCastStep, 180);
+          return;
+        }
+
+        revealTimer = window.setTimeout(() => {
+          set((state) => ({
+            casting: {
+              ...state.casting,
+              isQuickCasting: false,
+              isRevealed: true,
+              isRevealing: false,
+              isReleasing: true,
+            },
+          }));
+          revealTimer = null;
+
+          releaseTimer = window.setTimeout(() => {
+            set((state) => ({
+              casting: {
+                ...state.casting,
+                isReleasing: false,
+              },
+            }));
+            releaseTimer = null;
+          }, 900);
+
+          autoFlipTimer = window.setTimeout(() => {
+            set((state) => ({
+              casting: {
+                ...state.casting,
+                flippedHex: {
+                  ...state.casting.flippedHex,
+                  primary: true,
+                },
+              },
+            }));
+            autoFlipTimer = null;
+          }, 500);
+        }, 2500);
+      }, 1500);
+    };
+
+    runQuickCastStep();
+  },
+
   hydrateFromStorage() {
     const savedLocale = loadLocale();
     const savedCasting = loadCasting();
@@ -258,6 +384,7 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
         castTime: new Date(),
         lines: [],
         isCasting: false,
+        isQuickCasting: false,
         isRevealing: false,
         isRevealed: false,
         isReleasing: false,
@@ -277,7 +404,8 @@ export const useTusoStore = create<TusoStore>((set, get) => ({
     set((state) => ({
       shell: {
         ...state.shell,
-        topSheet: 'half',
+        topSheet: 'full',
+        bottomSheet: 'collapsed',
         activeContext: 'personal',
       },
       personalReading: {

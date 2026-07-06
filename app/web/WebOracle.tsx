@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { CastResultSummary } from './components/CastResultSummary';
 import { CastingSheet } from './components/CastingSheet';
 import { Compass } from './components/Compass';
 import { PersonalReadingSheet } from './components/PersonalReadingSheet';
@@ -20,6 +21,7 @@ export function WebOracle() {
   const hexagrams = hexagramText[locale];
   const castingView = getCastingView(state, copy, hexagrams);
   const isCapturing = casting.asked && (!casting.isRevealed || casting.isReleasing);
+  const isPersonalContext = shell.activeContext === 'personal';
 
   useEffect(() => {
     state.setToday(new Date());
@@ -61,27 +63,39 @@ export function WebOracle() {
         />
       }
       bottomSheet={
-        <CastingSheet
-          asked={casting.asked}
-          castTime={casting.castTime}
-          capturedQuestion={castingView.capturedQuestion}
-          changedTitle={castingView.changedTitle}
-          copy={copy}
-          displayChangedHexagram={castingView.displayChangedHexagram}
-          displayMainHexagram={castingView.displayMainHexagram}
-          flippedHex={casting.flippedHex}
-          hexagrams={hexagrams}
-          isCasting={casting.isCasting}
-          isRevealing={casting.isRevealing}
-          locale={locale}
-          lines={casting.lines}
-          mainTitle={castingView.mainTitle}
-          onCast={state.handleCast}
-          onClose={state.closeCastingSheet}
-          onPersonalReading={state.openPersonalReadingSheet}
-          onToggleMoving={state.toggleMovingHexagram}
-          onTogglePrimary={state.togglePrimaryHexagram}
-        />
+        isPersonalContext ? (
+          <CastResultSummary
+            changedHexagram={castingView.displayChangedHexagram}
+            copy={copy}
+            hexagrams={hexagrams}
+            lines={casting.lines}
+            mainHexagram={castingView.displayMainHexagram}
+          />
+        ) : (
+          <CastingSheet
+            asked={casting.asked}
+            castTime={casting.castTime}
+            capturedQuestion={castingView.capturedQuestion}
+            changedTitle={castingView.changedTitle}
+            copy={copy}
+            displayChangedHexagram={castingView.displayChangedHexagram}
+            displayMainHexagram={castingView.displayMainHexagram}
+            flippedHex={casting.flippedHex}
+            hexagrams={hexagrams}
+            isCasting={casting.isCasting}
+            isQuickCasting={casting.isQuickCasting}
+            isRevealing={casting.isRevealing}
+            locale={locale}
+            lines={casting.lines}
+            mainTitle={castingView.mainTitle}
+            onCast={state.handleCast}
+            onClose={state.closeCastingSheet}
+            onPersonalReading={state.openPersonalReadingSheet}
+            onQuickCast={state.handleQuickCast}
+            onToggleMoving={state.toggleMovingHexagram}
+            onTogglePrimary={state.togglePrimaryHexagram}
+          />
+        )
       }
       copy={copy}
       isAsking={casting.asked}

@@ -15,6 +15,7 @@ type CastingSheetProps = {
   flippedHex: { primary: boolean; moving: boolean };
   hexagrams: Record<number, HexagramText>;
   isCasting: boolean;
+  isQuickCasting: boolean;
   isRevealing: boolean;
   locale: WebLocale;
   lines: CastLine[];
@@ -22,6 +23,7 @@ type CastingSheetProps = {
   onCast: () => void;
   onClose: () => void;
   onPersonalReading: () => void;
+  onQuickCast: () => void;
   onToggleMoving: () => void;
   onTogglePrimary: () => void;
 };
@@ -37,6 +39,7 @@ export function CastingSheet({
   flippedHex,
   hexagrams,
   isCasting,
+  isQuickCasting,
   isRevealing,
   locale,
   lines,
@@ -44,12 +47,14 @@ export function CastingSheet({
   onCast,
   onClose,
   onPersonalReading,
+  onQuickCast,
   onToggleMoving,
   onTogglePrimary,
 }: CastingSheetProps) {
   const isComplete = lines.length >= 6;
   const castButtonText = isComplete ? copy.finalCta : copy.cast;
   const isLoading = isCasting || isRevealing;
+  const canQuickCast = !isLoading && !isQuickCasting && !isComplete;
 
   return (
     <div className="question-answer-sheet" aria-hidden={!asked}>
@@ -93,11 +98,23 @@ export function CastingSheet({
         </div>
 
         <div className="question-sheet-actions">
+          {!isComplete ? (
+            <button
+              className="question-quick-cast-button"
+              type="button"
+              onClick={onQuickCast}
+              disabled={!canQuickCast}
+            >
+              {copy.quickCast}
+            </button>
+          ) : (
+            <span />
+          )}
           <button
             className="question-cast-button"
             type="button"
             onClick={isComplete ? onPersonalReading : onCast}
-            disabled={isLoading}
+            disabled={isLoading || isQuickCasting}
           >
             {isLoading ? (
               <span className="question-cast-spinner" aria-label={copy.casting} />

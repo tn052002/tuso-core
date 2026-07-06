@@ -18,6 +18,7 @@ export type WebCopy = {
   primaryHexagram: string;
   movingHexagram: string;
   cast: string;
+  quickCast: string;
   casting: string;
   finalCta: string;
   personalReadingTitle: string;
@@ -59,12 +60,13 @@ export const webCopy: Record<WebLocale, WebCopy> = {
     primaryHexagram: 'Primary Hexagram',
     movingHexagram: 'Moving Hexagram',
     cast: 'Cast',
+    quickCast: 'Quick Cast',
     casting: 'Casting',
     finalCta: 'See what this mean to YOU',
     personalReadingTitle: 'Personal Reading',
-    personalReadingStepForm: 'Tượng',
-    personalReadingStepLaw: 'Lý',
-    personalReadingStepAction: 'Nhân',
+    personalReadingStepForm: 'Hexagram',
+    personalReadingStepLaw: 'Raw',
+    personalReadingStepAction: 'Personal',
     personalReadingStepFormHelp: 'Form complete',
     personalReadingStepLawHelp: 'Law complete',
     personalReadingStepActionHelp: 'Action current',
@@ -103,6 +105,7 @@ export const webCopy: Record<WebLocale, WebCopy> = {
     primaryHexagram: 'Quẻ Chính',
     movingHexagram: 'Quẻ Biến',
     cast: 'Gieo',
+    quickCast: 'Gieo Nhanh',
     casting: 'Đang gieo',
     finalCta: 'Xem điều này có nghĩa gì với BẠN',
     personalReadingTitle: 'Bản đọc cá nhân',
