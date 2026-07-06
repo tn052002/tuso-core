@@ -5,6 +5,7 @@ export type WebLocale = 'en' | 'vi';
 export type WebCopy = {
   localeToggleLabel: string;
   compassLabel: string;
+  compassHoldLabel: string;
   breathIn: string;
   breathOut: string;
   questionEyebrow: string;
@@ -85,6 +86,7 @@ export const webCopy: Record<WebLocale, WebCopy> = {
   en: {
     localeToggleLabel: 'Switch language to Vietnamese',
     compassLabel: 'Breathing compass',
+    compassHoldLabel: 'Press & hold center for Oracle',
     breathIn: 'Breath in 5.5s',
     breathOut: 'Breath out 5.5s',
     questionEyebrow: 'Take a deep breath, then release slowly',
@@ -169,6 +171,7 @@ export const webCopy: Record<WebLocale, WebCopy> = {
   vi: {
     localeToggleLabel: 'Chuyển ngôn ngữ sang tiếng Anh',
     compassLabel: 'La bàn hơi thở',
+    compassHoldLabel: 'Nhấn giữ tâm để hỏi Oracle',
     breathIn: 'Hít vào 5.5s',
     breathOut: 'Thở ra 5.5s',
     questionEyebrow: 'Hít vào một hơi sâu, rồi thở ra từ từ',

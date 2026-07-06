@@ -1,34 +1,28 @@
-import type { HexagramText } from '../i18n/hexagrams';
 import type { WebCopy } from '../i18n/locales';
-import type { CastLine, Hexagram } from '../lib/iching';
-import { CastSummaryHexCard } from './CastSummaryHexCard';
+import type { WebLocale } from '../i18n/locales';
+import { formatCastTime } from '../lib/date';
 
 type CastResultSummaryProps = {
-  changedHexagram: Hexagram | null;
+  castTime: Date | null;
   copy: WebCopy;
-  hexagrams: Record<number, HexagramText>;
-  lines: CastLine[];
-  mainHexagram: Hexagram | null;
+  locale: WebLocale;
+  question: string;
 };
 
 export function CastResultSummary({
-  changedHexagram,
+  castTime,
   copy,
-  hexagrams,
-  lines,
-  mainHexagram,
+  locale,
+  question,
 }: CastResultSummaryProps) {
-  const mainName = mainHexagram ? hexagrams[mainHexagram.number].name : copy.waiting;
-  const changedName = changedHexagram ? hexagrams[changedHexagram.number].name : copy.noMoving;
+  const displayQuestion = question.trim() || copy.defaultQuestion;
 
   return (
-    <aside className="cast-summary-sheet" aria-label={copy.hexagramGridLabel}>
-      <CastSummaryHexCard hexagram={mainHexagram} lines={lines} name={mainName} />
-      <span className="cast-summary-arrow" aria-hidden="true">
-        <span className="cast-summary-arrow-mobile">→</span>
-        <span className="cast-summary-arrow-desktop">↓</span>
+    <aside className="cast-summary-sheet" aria-label={copy.questionAriaLabel}>
+      <span className="cast-summary-time">
+        {castTime ? formatCastTime(castTime, locale) : ''}
       </span>
-      <CastSummaryHexCard changed hexagram={changedHexagram} lines={lines} name={changedName} />
+      <p className="cast-summary-question">{displayQuestion}</p>
     </aside>
   );
 }

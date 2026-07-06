@@ -82,11 +82,10 @@ export function WebOracle({ anonymousSessionId }: WebOracleProps) {
       bottomSheet={
         isPersonalContext ? (
           <CastResultSummary
-            changedHexagram={castingView.displayChangedHexagram}
+            castTime={casting.castTime}
             copy={copy}
-            hexagrams={hexagrams}
-            lines={casting.lines}
-            mainHexagram={castingView.displayMainHexagram}
+            locale={locale}
+            question={casting.question}
           />
         ) : (
           <CastingSheet
@@ -128,8 +127,10 @@ export function WebOracle({ anonymousSessionId }: WebOracleProps) {
           />
           <Compass
             copy={copy}
+            disabled={casting.asked}
             isCaptured={isCapturing}
             isReleasing={casting.isReleasing}
+            onHoldOracle={state.openCastingSheet}
           />
         </>
       }
